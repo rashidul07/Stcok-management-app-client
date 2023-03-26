@@ -1,7 +1,7 @@
 
 const API = {
-    productList: 'http://localhost:5000/products',
-    addProduct: 'http://localhost:5000/addProducts',
+    productList: 'https://rafimedicine.cyclic.app/products',
+    addProduct: 'https://rafimedicine.cyclic.app/addProducts',
 }
 
 export default async function fetchData(url, method, body = {}, params = {}) {

@@ -20,7 +20,7 @@ class AddProductHandler {
     }
 
     handleAddToListClick = (e) => {
-        console.log('clicked', this.user?.email);
+
         e.preventDefault();
         if (!this.user?.email) {
             this.setWarningMessage({ message: 'Please login first', type: 'error' });

@@ -81,7 +81,7 @@ function AddProductPage() {
             user
         );
     }, [productDetails, localProducts, deletedProduct, warningMessage, user])
-    console.log(modifiedProductList);
+
     return (
         <div className="p-12 md:m-auto md:border-2 max-sm:w-screen">
             <h1 className="text-2xl font-bold mb-4 text-center text-black">Add Product <Indicator item={productLength} /></h1>

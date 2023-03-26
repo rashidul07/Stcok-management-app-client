@@ -12,7 +12,7 @@ export default function UseContext() {
         productList,
         setProductList
     } = useContext(AuthContext);
-    console.log(user);
+
     return {
         error,
         user,

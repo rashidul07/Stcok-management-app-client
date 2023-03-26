@@ -21,11 +21,11 @@ const AddUser = () => {
     }, [error, user]);
 
     //redirect if user not admin
-    // useEffect(() => {
-    //     if (user.email !== 'rashed@rmc.com') {
-    //         window.location.pathname = '/';
-    //     }
-    // }, [user]);
+    useEffect(() => {
+        if (user.email !== 'rashed@rmc.com') {
+            window.location.pathname = '/';
+        }
+    }, [user]);
 
     return (
         <section className="bg-gray-50 dark:bg-gray-900 overflow-hidden w-full">

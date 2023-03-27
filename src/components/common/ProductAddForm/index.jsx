@@ -41,7 +41,7 @@ const ProductAddForm = ({ modifiedProductList, productDetails, setProductDetails
                 <input
                     id="quantity"
                     type="number"
-                    value={productDetails?.quantity}
+                    value={productDetails?.quantity || ''}
                     onChange={(event) => updateProductDetails('quantity', Number(event.target.value), productDetails, setProductDetails)}
                     className="font-bold bg-white py-1 px-2 rounded-md border-gray-600 my-1 border-2 text-amber-500 w-full"
                 />

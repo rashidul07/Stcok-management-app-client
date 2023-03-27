@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import LocalStorageProduct from "../../common/LocalStrorageProduct";
 import ProductAddForm from "../../common/ProductAddForm";
 import UseContext from "../../contexts/UseContext";
-import { deletePermanently, handleProductSubmit, updateTheConstructor } from "../../Helper/AddProductHandler";
+import { deletePermanently, handleProductSubmit, margeArray, updateTheConstructor } from "../../Helper/AddProductHandler";
 import { Indicator } from "../../Libs/Indicator";
 
 function AddProductPage() {
@@ -10,7 +10,7 @@ function AddProductPage() {
     const [localProducts, setLocalProducts] = useState([]);
     const [deletedProduct, setDeletedProduct] = useState([]);
     const [modifiedProductList, setModifiedProductList] = useState([]); // only for testing purpose .. need to change the name to label of database product
-    const { productList, user } = UseContext()
+    const { productList, user, setProductList } = UseContext()
     const productLength = productList.length
     const [warningMessage, setWarningMessage] = useState({ message: '', type: '' });
     const [isLoading, setIsLoading] = useState(false);
@@ -50,21 +50,12 @@ function AddProductPage() {
                 }
             )
         })
-        setModifiedProductList(modifiedData);
+        setModifiedProductList(margeArray(localProducts, modifiedData));
     }, [productList]);
 
     // demo product list for testing purpose will be updated with the database product list
     useEffect(() => {
-
-        const mergedArray = localProducts.concat(modifiedProductList);
-
-        const uniqueArray = mergedArray.reduce((acc, obj) => {
-            if (!acc.find(item => item.label === obj.label)) {
-                acc.push(obj);
-            }
-            return acc;
-        }, []);
-        setModifiedProductList(uniqueArray);
+        setModifiedProductList(margeArray(localProducts, modifiedProductList));
     }, [localProducts])
 
     // to update the constructor dependency array 
@@ -78,9 +69,11 @@ function AddProductPage() {
             deletedProduct,
             setDeletedProduct,
             setIsLoading,
-            user
+            user,
+            productList,
+            setProductList
         );
-    }, [productDetails, localProducts, deletedProduct, warningMessage, user])
+    }, [productDetails, localProducts, deletedProduct, warningMessage, user, productList])
 
     return (
         <div className="p-12 md:m-auto md:border-2 max-sm:w-screen">

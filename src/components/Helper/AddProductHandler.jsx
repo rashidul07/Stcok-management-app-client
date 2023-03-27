@@ -2,7 +2,19 @@ import fetchData from "./HandleApi";
 import { storeData } from "./storeData";
 class AddProductHandler {
 
-    updateTheConstructor = (productDetails, setProductDetails, setWarningMessage, localProducts, setLocalProducts, deletedProduct, setDeletedProduct, setIsLoading, user) => {
+    updateTheConstructor = (
+        productDetails,
+        setProductDetails,
+        setWarningMessage,
+        localProducts,
+        setLocalProducts,
+        deletedProduct,
+        setDeletedProduct,
+        setIsLoading,
+        user,
+        productList,
+        setProductList) => {
+
         this.productDetails = productDetails;
         this.setProductDetails = setProductDetails;
         this.setWarningMessage = setWarningMessage;
@@ -12,11 +24,76 @@ class AddProductHandler {
         this.setDeletedProduct = setDeletedProduct;
         this.setIsLoading = setIsLoading;
         this.user = user;
+        this.productList = productList;
+        this.setProductList = setProductList;
+    }
+
+    /*if any product is available both local and modified product list then remove 
+        the product from modified product list and keep the local product list */
+    margeArray = (localProducts, modifiedProducts) => {
+        const mergedProductList = [];
+        localProducts.forEach(localProductItem => {
+            const modifiedProductIndex = modifiedProducts.findIndex(modifiedProductItem => modifiedProductItem.rId === localProductItem.rId);
+
+            if (modifiedProductIndex !== -1) {
+                modifiedProducts.splice(modifiedProductIndex, 1);
+            }
+            mergedProductList.push(localProductItem);
+        });
+
+        mergedProductList.push(...modifiedProducts);
+        return mergedProductList;
     }
 
     updateProductDetails = (fieldName, value) => {
         const newProductDetails = { ...this.productDetails, [fieldName]: value };
         this.setProductDetails(newProductDetails);
+    }
+
+    updateProductDataForServer = (type) => {
+        if (type === 'databaseProduct') {
+            const productList =
+                [...this.localProducts,
+                {
+                    ...this.productDetails,
+                    label: this.productDetails.label.trim(),
+                    name: this.productDetails.label.trim(),
+                    company: this.productDetails.company.value,
+                    updated_at: new Date().toISOString(),
+                    updated_by: this.user.email,
+                }
+                ];
+            return productList;
+        } else if (type === 'localProduct') {
+            const updatedProductIndex = this.localProducts.findIndex(p => p.rId === this.productDetails.rId);
+            const updatedProductList = [...this.localProducts];
+            updatedProductList[updatedProductIndex] = {
+                ...this.productDetails,
+                label: this.productDetails.label.trim(),
+                name: this.productDetails.label.trim(),
+                company: this.productDetails.company.value,
+                updated_at: new Date().toISOString(),
+                updated_by: this.user.email,
+            }
+            return updatedProductList;
+        } else {
+            const id = `${Math.random().toString(36).replace('0.', '')}${Date.now().toString(36)}`;
+            const productList =
+                [...this.localProducts,
+                {
+                    rId: id, ...this.productDetails,
+                    label: this.productDetails.label.trim(),
+                    name: this.productDetails.label.trim(),
+                    company: this.productDetails.company.value,
+                    time: new Date().toISOString(),
+                    updated_at: new Date().toISOString(),
+                    created_by: this.user.email,
+                    updated_by: this.user.email,
+                    status: 'pending'
+                }
+                ];
+            return productList;
+        }
     }
 
     handleAddToListClick = (e) => {
@@ -31,34 +108,14 @@ class AddProductHandler {
             return;
         }
         let productList;
-        if (this.productDetails._id) {
-            productList =
-                [...this.localProducts,
-                {
-                    ...this.productDetails,
-                    label: this.productDetails.label.trim(),
-                    name: this.productDetails.label.trim(),
-                    company: this.productDetails.company.value,
-                    updated_at: new Date().toISOString(),
-                    updated_by: this.user.email,
-                }
-                ];
+        //find index in localProducts array by _id
+        const productIndex = this.localProducts.findIndex(p => p._id === this.productDetails._id);
+        if (this.productDetails._id && productIndex === -1) {
+            productList = this.updateProductDataForServer('databaseProduct');
+        } else if (this.productDetails.rId) {
+            productList = this.updateProductDataForServer('localProduct');
         } else {
-            const id = `${Math.random().toString(36).replace('0.', '')}${Date.now().toString(36)}`;
-            productList =
-                [...this.localProducts,
-                {
-                    rId: id, ...this.productDetails,
-                    label: this.productDetails.label.trim(),
-                    name: this.productDetails.label.trim(),
-                    company: this.productDetails.company.value,
-                    time: new Date().toISOString(),
-                    updated_at: new Date().toISOString(),
-                    created_by: this.user.email,
-                    updated_by: this.user.email,
-                    status: 'pending'
-                }
-                ];
+            productList = this.updateProductDataForServer('newProduct');
         }
 
         localStorage.setItem("productList", JSON.stringify(productList));
@@ -101,6 +158,7 @@ class AddProductHandler {
         if (confirmBox === true) {
             const response = await fetchData('addProduct', 'POST', { productsCollection: this.localProducts })
             if (response.status === 'success') {
+                this.setProductList(this.margeArray(this.localProducts, this.productList));
                 this.setWarningMessage({ message: `New ${response.data?.insertedCount || 0} & Updated ${response.data?.modifiedCount || 0} added.`, type: 'success' });
                 localStorage.removeItem('productList');
                 this.setLocalProducts([]);
@@ -138,5 +196,6 @@ export const {
     deletePermanently,
     handleProductSubmit,
     handleOnFill,
+    margeArray,
     handleRestore } = new AddProductHandler();
 

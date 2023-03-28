@@ -8,3 +8,13 @@
   flex: 1;
   display: flex;
 }
+
+.productNameContainer{
+  position: relative
+}
+
+.clear-button {
+  position: absolute;
+  top: -3px;
+  right: -5px;
+}

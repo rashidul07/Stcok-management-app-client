@@ -166,8 +166,8 @@ class AddProductHandler {
             else {
                 this.setWarningMessage({ message: response.message, type: 'error' });
             }
-            this.setIsLoading(false);
         }
+        this.setIsLoading(false);
     }
 
     handleOnFill = (value) => {

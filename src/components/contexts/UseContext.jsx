@@ -10,7 +10,9 @@ export default function UseContext() {
         googleLogin,
         createUser,
         productList,
-        setProductList
+        setProductList,
+        getProductList,
+        getStockProductList
     } = useContext(AuthContext);
 
     return {
@@ -22,6 +24,8 @@ export default function UseContext() {
         googleLogin,
         createUser,
         productList,
-        setProductList
+        setProductList,
+        getProductList,
+        getStockProductList
     }
 }

@@ -1,9 +1,9 @@
 import { useState } from "react";
-import DeletedProductField from "./DeletedProductField";
+import Buttons from "./Buttons";
 import DeleteHandlerBtn from "./DeleteHandlerBtn";
-import EditedProductField from "./EditedProductField";
-import ListHandlerBtn from "./ListHandelerBtn";
+import EditableField from "./EditableField";
 import './localStorage.css';
+import ProductInfo from "./ProductInfo";
 
 const LocalStorageProduct = ({ localProducts, storageName, setLocalProducts, buttonText, btnOnClick, isLoading }) => {
     const [editingProduct, setEditingProduct] = useState(null);
@@ -26,13 +26,13 @@ const LocalStorageProduct = ({ localProducts, storageName, setLocalProducts, but
                         {localProducts.map((product, index) => (
                             <div key={index} className="flex items-center">
                                 {editingProduct === product.rId ? (
-                                    <EditedProductField product={product} localProducts={localProducts} setLocalProducts={setLocalProducts} storageName={storageName} />
+                                    <EditableField product={product} localProducts={localProducts} setLocalProducts={setLocalProducts} storageName={storageName} />
                                 ) : (
-                                    <DeletedProductField product={product} />
+                                    <ProductInfo product={product} />
                                 )}
                                 {
                                     storageName !== 'deletedProduct' && (
-                                        <ListHandlerBtn handleEdit={handleEdit} product={product} />
+                                        <Buttons handleEdit={handleEdit} product={product} />
                                     )
                                 }
 
@@ -46,7 +46,7 @@ const LocalStorageProduct = ({ localProducts, storageName, setLocalProducts, but
                     </div>
                 </div>
                 <div className="text-center mt-4">
-                    <button className={`btn btn-outline btn-primary h-9 min-h-fit w-48 ${(isLoading && storageName === 'productList') ? 'loading' : ''}`} onClick={btnOnClick}>{buttonText}</button>
+                    <button className={`btn btn-outline btn-primary h-9 min-h-fit w-48 ${(isLoading && (storageName === 'productList' || "stockList")) ? 'loading' : ''}`} onClick={btnOnClick}>{buttonText}</button>
                 </div>
             </>
         )

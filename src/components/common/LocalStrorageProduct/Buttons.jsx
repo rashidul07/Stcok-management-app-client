@@ -1,7 +1,7 @@
 import { BsFillTrashFill } from "react-icons/bs";
 import { FaRegEdit } from "react-icons/fa";
 import { handleDelete } from "../../Helper/AddProductHandler";
-const ListHandlerBtn = ({ handleEdit, product }) => {
+const Buttons = ({ handleEdit, product }) => {
     return (
         <>
             <p className="text-lg font-bold text-black w-10 pl-2" onClick={() => handleEdit(product.rId)}><FaRegEdit /></p>
@@ -10,4 +10,4 @@ const ListHandlerBtn = ({ handleEdit, product }) => {
     )
 }
 
-export default ListHandlerBtn;
+export default Buttons;

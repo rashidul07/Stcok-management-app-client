@@ -34,8 +34,26 @@ export const storeData = {
         { value: 'whitehorse', label: 'White Horse' },
         { value: 'ziska', label: 'Ziska' },
         { value: 'others', label: 'All Others' }
+    ],
+    stockCompanyList: [
+        { value: '', label: 'Please select a company' },
+        { value: 'aci', label: 'Aci' },
+        { value: 'acme', label: 'Acme' },
+        { value: 'aristo', label: 'Aristo' },
+        { value: 'beximco', label: 'Beximco' },
+        { value: 'drug', label: 'Drug' },
+        { value: 'healthcare', label: 'Healthcare' },
+        { value: 'incepta', label: 'Incepta' },
+        { value: 'opsonin', label: 'Opsonin' },
+        { value: 'reneta', label: 'Reneta' },
+        { value: 'square', label: 'Square' },
+        { value: 'unihealth', label: 'Uni Health' },
+        { value: 'others', label: 'All Others' }
     ]
+
 }
+
+
 
 //for demo purpose
 export const demoProductData = [{

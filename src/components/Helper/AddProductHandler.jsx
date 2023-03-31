@@ -13,7 +13,9 @@ class AddProductHandler {
         setIsLoading,
         user,
         productList,
-        setProductList) => {
+        setProductList,
+        type = 'product'
+    ) => {
 
         this.productDetails = productDetails;
         this.setProductDetails = setProductDetails;
@@ -26,6 +28,7 @@ class AddProductHandler {
         this.user = user;
         this.productList = productList;
         this.setProductList = setProductList;
+        this.type = type;
     }
 
     /*if any product is available both local and modified product list then remove 
@@ -48,6 +51,7 @@ class AddProductHandler {
     updateProductDetails = (fieldName, value) => {
         const newProductDetails = { ...this.productDetails, [fieldName]: value };
         this.setProductDetails(newProductDetails);
+        console.log(newProductDetails, '2');
     }
 
     updateProductDataForServer = (type) => {
@@ -107,6 +111,13 @@ class AddProductHandler {
             this.setWarningMessage({ message: 'Please fill up all the fields', type: 'error' });
             return;
         }
+        if (this.type === 'stock') {
+            if (this.productDetails?.price === undefined || this.productDetails?.price === 0) {
+                this.setWarningMessage({ message: 'Please fill up all the fields', type: 'error' });
+                return
+            }
+        }
+
         let productList;
         //find index in localProducts array by _id
         const productIndex = this.localProducts.findIndex(p => p._id === this.productDetails._id);
@@ -118,13 +129,28 @@ class AddProductHandler {
             productList = this.updateProductDataForServer('newProduct');
         }
 
-        localStorage.setItem("productList", JSON.stringify(productList));
         this.setLocalProducts(productList);
-        this.setProductDetails({
-            label: '',
-            company: storeData.companyList[0],
-            quantity: 1
-        });
+
+        if (this.type === 'stock') {
+            localStorage.setItem("stockList", JSON.stringify(productList));
+            this.setProductDetails({
+                label: '',
+                company: this.productDetails.company,
+                quantity: this.productDetails.quantity,
+                price: this.productDetails.price,
+                invoiceDiscount: this.productDetails.invoiceDiscount,
+                extraDiscount: this.productDetails.extraDiscount,
+            });
+        }
+
+        if (this.type === 'product') {
+            localStorage.setItem("productList", JSON.stringify(productList));
+            this.setProductDetails({
+                label: '',
+                company: this.productDetails.company,
+                quantity: 1
+            });
+        }
     }
 
     handleDelete = (id) => {
@@ -133,10 +159,14 @@ class AddProductHandler {
         if (confirmBox === true) {
             const updatedProducts = this.localProducts.filter(p => p.rId !== id);
             this.setLocalProducts(updatedProducts);
-            localStorage.setItem('productList', JSON.stringify(updatedProducts));
-            const deletedProductList = [...this.deletedProduct, removedProduct];
-            localStorage.setItem('deletedProduct', JSON.stringify(deletedProductList));
-            this.setDeletedProduct(deletedProductList);
+            if (this.type === 'stock') {
+                localStorage.setItem("stockList", JSON.stringify(updatedProducts));
+            } else if (this.type === 'product') {
+                localStorage.setItem('productList', JSON.stringify(updatedProducts));
+                const deletedProductList = [...this.deletedProduct, removedProduct];
+                localStorage.setItem('deletedProduct', JSON.stringify(deletedProductList));
+                this.setDeletedProduct(deletedProductList);
+            }
         }
     }
 
@@ -156,11 +186,11 @@ class AddProductHandler {
         this.setIsLoading(true);
         const confirmBox = window.confirm(`Submit All Products?`);
         if (confirmBox === true) {
-            const response = await fetchData('addProduct', 'POST', { productsCollection: this.localProducts })
+            const response = await fetchData(this.type === "product" ? 'addProduct' : 'addStockProduct', 'POST', { productsCollection: this.localProducts })
             if (response.status === 'success') {
                 this.setProductList(this.margeArray(this.localProducts, this.productList));
                 this.setWarningMessage({ message: `New ${response.data?.insertedCount || 0} & Updated ${response.data?.modifiedCount || 0} added.`, type: 'success' });
-                localStorage.removeItem('productList');
+                localStorage.removeItem(this.type === "product" ? 'productList' : 'stockList');
                 this.setLocalProducts([]);
             }
             else {

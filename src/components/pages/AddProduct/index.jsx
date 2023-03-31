@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
+import InputFieldsContainer from "../../common/InputFieldsContainer";
 import LocalStorageProduct from "../../common/LocalStrorageProduct";
-import ProductAddForm from "../../common/ProductAddForm";
 import UseContext from "../../contexts/UseContext";
 import { deletePermanently, handleProductSubmit, margeArray, updateTheConstructor } from "../../Helper/AddProductHandler";
-import { Indicator } from "../../Libs/Indicator";
-
+import { storeData } from "../../Helper/storeData";
 function AddProductPage() {
     const [productDetails, setProductDetails] = useState({ quantity: 1 });
     const [localProducts, setLocalProducts] = useState([]);
     const [deletedProduct, setDeletedProduct] = useState([]);
     const [modifiedProductList, setModifiedProductList] = useState([]); // only for testing purpose .. need to change the name to label of database product
-    const { productList, user, setProductList } = UseContext()
+    const { productList, user, setProductList, getProductList } = UseContext()
     const productLength = productList.length
     const [warningMessage, setWarningMessage] = useState({ message: '', type: '' });
     const [isLoading, setIsLoading] = useState(false);
@@ -20,6 +19,10 @@ function AddProductPage() {
         setLocalProducts(JSON.parse(localStorage.getItem("productList")) || []);
         setDeletedProduct(JSON.parse(localStorage.getItem("deletedProduct")) || []);
     }, []);
+
+    useEffect(() => {
+        getProductList();
+    }, [user]);
 
     // to show the alert if the product is not filled
     useEffect(() => {
@@ -37,6 +40,7 @@ function AddProductPage() {
         if (warningMessage.type === 'success') {
             setTimeout(() => {
                 setWarningMessage({ message: '', type: '' });
+                window.location.reload();
             }, 10000);
         }
     }, [warningMessage.message]);
@@ -76,17 +80,21 @@ function AddProductPage() {
     }, [productDetails, localProducts, deletedProduct, warningMessage, user, productList])
 
     return (
-        <div className="p-12 md:m-auto md:border-2 max-sm:w-screen">
-            <h1 className="text-2xl font-bold mb-4 text-center text-black">Add Product <Indicator item={productLength} /></h1>
-            <ProductAddForm
-                modifiedProductList={modifiedProductList}
-                productDetails={productDetails}
-                setProductDetails={setProductDetails}
-                warningMessage={warningMessage}
-            />
-            <LocalStorageProduct localProducts={localProducts} storageName="productList" setLocalProducts={setLocalProducts} buttonText="Submit" isLoading={isLoading} btnOnClick={handleProductSubmit} />
-            <LocalStorageProduct localProducts={deletedProduct} storageName="deletedProduct" setLocalProducts={setDeletedProduct} buttonText="Delete permanently" btnOnClick={deletePermanently} isLoading={isLoading} />
-        </div>
+        <InputFieldsContainer
+            title="Product"
+            productLength={productLength}
+            modifiedProductList={modifiedProductList}
+            productDetails={productDetails}
+            setProductDetails={setProductDetails}
+            warningMessage={warningMessage}
+            handleProductSubmit={handleProductSubmit}
+            options={storeData.companyList}
+        >
+            <>
+                <LocalStorageProduct localProducts={localProducts} storageName="productList" setLocalProducts={setLocalProducts} buttonText="Submit" isLoading={isLoading} btnOnClick={handleProductSubmit} />
+                <LocalStorageProduct localProducts={deletedProduct} storageName="deletedProduct" setLocalProducts={setDeletedProduct} buttonText="Delete permanently" btnOnClick={deletePermanently} isLoading={isLoading} />
+            </>
+        </InputFieldsContainer>
     );
 }
 

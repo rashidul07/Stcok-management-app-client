@@ -69,7 +69,7 @@ const Navbar = () => {
                                         <Link to="addProduct" >Add Shortlist</Link>
                                     </li>
                                     <li className="text-gray-600 hover:text-blue-600">
-                                        <a href="#">Add Stock</a>
+                                        <a href="addStock">Add Stock</a>
                                     </li>
                                     <li className="text-gray-600 hover:text-blue-600">
                                         <a href="#">Manage Shortlist</a>

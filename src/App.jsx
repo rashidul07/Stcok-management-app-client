@@ -5,6 +5,7 @@ import './App.css';
 import Footer from './components/common/Footer';
 import Navbar from './components/common/Navbar';
 import AddProductPage from "./components/pages/AddProduct";
+import AddStock from "./components/pages/AddStock";
 import AddUser from "./components/pages/AddUser";
 import ErrorPage from './components/pages/Error';
 import Home from './components/pages/Home';
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
       {
         path: '/addProduct',
         element: <AddProductPage />,
+      },
+      {
+        path: '/addStock',
+        element: <AddStock />,
       },
       {
         path: '/addUser',

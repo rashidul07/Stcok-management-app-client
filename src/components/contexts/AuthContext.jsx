@@ -24,9 +24,17 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  useEffect(() => {
-    getProductList()
-  }, [user.email])
+  const getStockProductList = async () => {
+    if (user.email) {
+      const response = await fetchData('stockList', 'GET')
+      if (response.status === 'success') {
+        setProductList(response.data)
+      }
+      if (response.status === 'error') {
+        setError(response);
+      }
+    }
+  }
 
   const logOut = () => {
     signOut(auth)
@@ -107,7 +115,9 @@ export const AuthProvider = ({ children }) => {
     googleLogin,
     createUser,
     productList,
-    setProductList
+    setProductList,
+    getProductList,
+    getStockProductList
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

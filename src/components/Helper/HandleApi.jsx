@@ -2,6 +2,8 @@
 const API = {
     productList: 'http://localhost:5000/products',
     addProduct: 'http://localhost:5000/addProducts',
+    addStockProduct: 'http://localhost:5000/addStockProduct',
+    stockList: 'http://localhost:5000/stockProducts',
 }
 
 export default async function fetchData(url, method, body = {}, params = {}) {

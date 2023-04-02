@@ -14,7 +14,9 @@ class AddProductHandler {
         user,
         productList,
         setProductList,
-        type = 'product'
+        type,
+        modifiedProductList,
+        setModifiedProductList
     ) => {
 
         this.productDetails = productDetails;
@@ -29,6 +31,8 @@ class AddProductHandler {
         this.productList = productList;
         this.setProductList = setProductList;
         this.type = type;
+        this.modifiedProductList = modifiedProductList;
+        this.setModifiedProductList = setModifiedProductList;
     }
 
     /*if any product is available both local and modified product list then remove 
@@ -159,6 +163,9 @@ class AddProductHandler {
         if (confirmBox === true) {
             const updatedProducts = this.localProducts.filter(p => p.rId !== id);
             this.setLocalProducts(updatedProducts);
+            //also remove from modified product list
+            const updatedModifiedProduct = this.modifiedProductList.filter(p => p.rId !== id);
+            this.setModifiedProductList(updatedModifiedProduct);
             if (this.type === 'stock') {
                 localStorage.setItem("stockList", JSON.stringify(updatedProducts));
             } else if (this.type === 'product') {

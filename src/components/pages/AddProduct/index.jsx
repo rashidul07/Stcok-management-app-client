@@ -59,6 +59,7 @@ function AddProductPage() {
 
     // demo product list for testing purpose will be updated with the database product list
     useEffect(() => {
+        console.log(localProducts);
         setModifiedProductList(margeArray(localProducts, modifiedProductList));
     }, [localProducts])
 
@@ -75,7 +76,10 @@ function AddProductPage() {
             setIsLoading,
             user,
             productList,
-            setProductList
+            setProductList,
+            'product',
+            modifiedProductList,
+            setModifiedProductList
         );
     }, [productDetails, localProducts, deletedProduct, warningMessage, user, productList])
 

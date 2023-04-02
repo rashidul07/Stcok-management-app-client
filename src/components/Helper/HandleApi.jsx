@@ -6,6 +6,11 @@ const API = {
     stockList: 'http://localhost:5000/stockProducts',
 }
 
+// productList: 'https://rmcserver.cyclic.app/products',
+//     addProduct: 'https://rmcserver.cyclic.app/addProducts',
+//     addStockProduct: 'https://rmcserver.cyclic.app/addStockProduct',
+//     stockList: 'https://rmcserver.cyclic.app/stockProducts',
+
 export default async function fetchData(url, method, body = {}, params = {}) {
     method = method?.toUpperCase() || 'GET';
     url = API[url] || url;

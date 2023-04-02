@@ -9,11 +9,12 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState({})
   const [error, setError] = useState('')
   const auth = getAuth();
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const [productList, setProductList] = useState([])
 
   const getProductList = async () => {
     if (user.email) {
+      setIsLoading(true)
       const response = await fetchData('productList', 'GET')
       if (response.status === 'success') {
         setProductList(response.data)
@@ -21,11 +22,13 @@ export const AuthProvider = ({ children }) => {
       if (response.status === 'error') {
         setError(response);
       }
+      setIsLoading(false)
     }
   }
 
   const getStockProductList = async () => {
     if (user.email) {
+      setIsLoading(true)
       const response = await fetchData('stockList', 'GET')
       if (response.status === 'success') {
         setProductList(response.data)
@@ -33,6 +36,7 @@ export const AuthProvider = ({ children }) => {
       if (response.status === 'error') {
         setError(response);
       }
+      setIsLoading(false)
     }
   }
 

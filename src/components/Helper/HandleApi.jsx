@@ -11,6 +11,8 @@ const API = {
 //     addProduct: 'https://rmcserver.cyclic.app/addProducts',
 //     addStockProduct: 'https://rmcserver.cyclic.app/addStockProduct',
 //     stockList: 'https://rmcserver.cyclic.app/stockProducts',
+//statusUpdate: 'https://rmcserver.cyclic.app/update',
+
 
 export default async function fetchData(url, method, body = {}, params = {}) {
     method = method?.toUpperCase() || 'GET';

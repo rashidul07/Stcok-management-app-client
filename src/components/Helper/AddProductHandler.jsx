@@ -5,7 +5,7 @@ class AddProductHandler {
     updateTheConstructor = (
         productDetails,
         setProductDetails,
-        setWarningMessage,
+        setAlertMessage,
         localProducts,
         setLocalProducts,
         deletedProduct,
@@ -21,7 +21,7 @@ class AddProductHandler {
 
         this.productDetails = productDetails;
         this.setProductDetails = setProductDetails;
-        this.setWarningMessage = setWarningMessage;
+        this.setAlertMessage = setAlertMessage;
         this.localProducts = localProducts;
         this.setLocalProducts = setLocalProducts;
         this.deletedProduct = deletedProduct;
@@ -55,7 +55,6 @@ class AddProductHandler {
     updateProductDetails = (fieldName, value) => {
         const newProductDetails = { ...this.productDetails, [fieldName]: value };
         this.setProductDetails(newProductDetails);
-        console.log(newProductDetails, '2');
     }
 
     updateProductDataForServer = (type) => {
@@ -108,16 +107,16 @@ class AddProductHandler {
 
         e.preventDefault();
         if (!this.user?.email) {
-            this.setWarningMessage({ message: 'Please login first', type: 'error' });
+            this.setAlertMessage({ message: 'Please login first', type: 'error' });
             return;
         }
         if (!this.productDetails?.label || !this.productDetails?.company?.value || !this.productDetails?.quantity) {
-            this.setWarningMessage({ message: 'Please fill up all the fields', type: 'error' });
+            this.setAlertMessage({ message: 'Please fill up all the fields', type: 'error' });
             return;
         }
         if (this.type === 'stock') {
             if (this.productDetails?.price === undefined || this.productDetails?.price === 0) {
-                this.setWarningMessage({ message: 'Please fill up all the fields', type: 'error' });
+                this.setAlertMessage({ message: 'Please fill up all the fields', type: 'error' });
                 return
             }
         }
@@ -196,12 +195,12 @@ class AddProductHandler {
             const response = await fetchData(this.type === "product" ? 'addProduct' : 'addStockProduct', 'POST', { productsCollection: this.localProducts })
             if (response.status === 'success') {
                 this.setProductList(this.margeArray(this.localProducts, this.productList));
-                this.setWarningMessage({ message: `New ${response.data?.insertedCount || 0} & Updated ${response.data?.modifiedCount || 0} added.`, type: 'success' });
+                this.setAlertMessage({ message: `New ${response.data?.insertedCount || 0} & Updated ${response.data?.modifiedCount || 0} added.`, type: 'success' });
                 localStorage.removeItem(this.type === "product" ? 'productList' : 'stockList');
                 this.setLocalProducts([]);
             }
             else {
-                this.setWarningMessage({ message: response.message, type: 'error' });
+                this.setAlertMessage({ message: response.message, type: 'error' });
             }
         }
         this.setIsLoading(false);

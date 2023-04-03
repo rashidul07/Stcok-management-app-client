@@ -16,6 +16,7 @@ export const AuthProvider = ({ children }) => {
 
   const getProductList = async () => {
     if (user.email && currentDataType !== 'product') {
+      setProductList([])
       setIsLoading(true)
       const response = await fetchData('productList', 'GET')
       if (response.status === 'success') {
@@ -31,6 +32,7 @@ export const AuthProvider = ({ children }) => {
 
   const getStockProductList = async () => {
     if (user.email && currentDataType !== 'stock') {
+      setProductList([])
       setIsLoading(true)
       const response = await fetchData('stockList', 'GET')
       if (response.status === 'success') {

@@ -25,9 +25,8 @@ const AllProducts = () => {
     }, [user]);
 
     useEffect(() => {
-        if (products.length === 0) {
+        if (selectedCompany === null)
             setProducts(productList)
-        }
     }, [productList])
 
     useEffect(() => {
@@ -47,6 +46,16 @@ const AllProducts = () => {
             setToggleClearRows(false)
         }
     }, [toggledClearRows])
+
+    useEffect(() => {
+        //get the product name and quantity from the selected product and set it to the textarea value so show in textarea
+        const selectedProductList = selectedProducts.map(product => {
+            return (
+                `${product.name} : ${product.quantity}`
+            )
+        })
+        setTextareaValue(selectedProductList.join('\n'))
+    }, [selectedProducts])
 
     const handleSelection = ({ selectedRows }) => {
         setCopyButtonText('Copy & Update')
@@ -122,18 +131,6 @@ const AllProducts = () => {
         setIsTableLoading(false);
     }
 
-
-    useEffect(() => {
-        //get the product name and quantity from the selected product and set it to the textarea value so show in textarea
-        const selectedProductList = selectedProducts.map(product => {
-            return (
-                `${product.name} : ${product.quantity}`
-            )
-        })
-        setTextareaValue(selectedProductList.join('\n'))
-    }, [selectedProducts])
-
-
     return (
         isLoading ?
             <div className="w-full md:w-2/3 lg:w-2/3 flex flex-col items-center justify-center overflow-hidden">
@@ -142,29 +139,19 @@ const AllProducts = () => {
             :
             (
                 <div className="w-full md:w-2/3 lg:w-2/3 flex flex-col items-center overflow-hidden">
-                    <h1 className="text-2xl text-black text-center font-bold mt-4 mb-2">All Products <Indicator item={products.length} /></h1>
+                    <h1 className="text-2xl text-black text-center font-bold mt-4 mb-2">
+                        All Products <Indicator item={products.length} />
+                        {selectedProducts.length > 0 && <Indicator item={selectedProducts.length} className='bg-indigo-600 ml-2' />}
+                    </h1>
                     {
                         productList.length > 0 && (
-                            <>
-                                <Select
-                                    id="company"
-                                    value={selectedCompany || storeData.companyList[0]}
-                                    onChange={(value) => setSelectedCompany(value)}
-                                    className="font-bold bg-white py-1 px-2 rounded-md border-gray-600 mt-2 border-2 text-amber-500 w-72"
-                                    options={storeData.companyList}
-                                />
-                                <div className="form-control w-52">
-                                    <label className="cursor-pointer label">
-                                        <span className="label-text text-black">{mode}</span>
-                                        <input type="checkbox" className="toggle toggle-info" onChange={handleModeChange} checked={mode === "Order Mode" ? true : false} />
-                                        {
-                                            selectedProducts.length > 0 && (
-                                                <Indicator item={selectedProducts.length} />
-                                            )
-                                        }
-                                    </label>
-                                </div>
-                            </>
+                            <Select
+                                id="company"
+                                value={selectedCompany || storeData.companyList[0]}
+                                onChange={(value) => setSelectedCompany(value)}
+                                className="font-bold bg-white py-1 px-2 rounded-md border-gray-600 my-2 border-2 text-amber-500 w-72"
+                                options={storeData.companyList}
+                            />
                         )
                     }
                     <DataTable
@@ -177,11 +164,13 @@ const AllProducts = () => {
                         selectableRowsHighlight
                         onSelectedRowsChange={handleSelection}
                         clearSelectedRows={toggledClearRows}
+                        conditionalRowStyles={TableSettings.conditionalRowStyles}
                     />
                     {alertMessage.type === 'error' && <Alert message={alertMessage.message} className="bg-red-500" />}
-                    {alertMessage.type === 'success' && <Alert message={alertMessage.message} className="bg-green-600" />}
+                    {alertMessage.type === 'success' && <Alert message={alertMessage.message} className="bg-green-600 mb-0" />}
                     {
-                        selectedProducts.length > 0 && (
+                        selectedProducts.length > 0 &&
+                        (
                             <>
                                 <textarea className="textarea textarea-primary bg-white text-black my-4 w-3/4 resize-y" value={TextareaValue} onChange={handleTextarea} ></textarea>
                                 <button className={`btn btn-wide btn-primary outline ${isTableLoading ? 'loading' : ""}`} onClick={copyButtonText === "Update" ? handleUpdate : handleCopy}>{copyButtonText}</button>

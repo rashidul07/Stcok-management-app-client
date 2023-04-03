@@ -6,7 +6,8 @@ import { storeData } from "../../Helper/storeData";
 import Alert from "../../Libs/Alert";
 
 const InputFields = ({ modifiedProductList = [], productDetails = {}, setProductDetails = () => { }, options, title }) => {
-    const { alertMessage } = UseContext()
+    const { alertMessage } = UseContext();
+
     const handleClear = (e) => {
         e.preventDefault();
         // give a alert to confirm the clear action
@@ -21,6 +22,7 @@ const InputFields = ({ modifiedProductList = [], productDetails = {}, setProduct
             }
         }
     }
+
     return (
         <form className="space-y-4 md:w-96">
             <div>

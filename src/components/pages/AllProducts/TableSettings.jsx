@@ -51,6 +51,15 @@ const TableSettings = {
             className: 'table-column quantity',
         }
     ],
+    conditionalRowStyles: [
+        {
+            when: row => row.status === 'complete',
+            style: {
+                backgroundColor: 'green',
+                color: 'white',
+            },
+        },
+    ]
 }
 
 export default TableSettings;

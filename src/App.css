@@ -18,3 +18,72 @@
   top: -3px;
   right: -5px;
 }
+
+.rdt_Table .rdt_TableHead .rdt_TableHeadRow {
+  background-color: #0a0a0af3 ;
+  color: #fff;
+}
+.shortListTable{
+  overflow-x: hidden !important;
+}
+.shortListTable .rdt_Table .rdt_TableBody .rdt_TableRow>div{
+  flex: none;
+  min-width: unset;
+  padding: 0 0;
+  padding-right: 10px;
+  width: 100%;
+}
+.shortListTable .rdt_Table .rdt_TableHead .rdt_TableHeadRow>div{
+  flex: none;
+  padding: 0px 0px;
+  padding-right: 10px;
+}
+
+.shortListTable .rdt_Table .rdt_TableHead .rdt_TableHeadRow>div:first-child{
+  width: 10%;
+  min-width: unset;
+}
+
+.shortListTable .rdt_Table .rdt_TableHead .rdt_TableHeadRow>div:nth-child(2){
+  width: 8%;
+  min-width: unset;
+}
+
+.shortListTable .rdt_Table .rdt_TableHead .rdt_TableHeadRow>div:nth-child(3){
+  width: 45%;
+  min-width: unset;
+}
+
+.shortListTable .rdt_Table .rdt_TableHead .rdt_TableHeadRow>div:nth-child(4){
+  width: 25%;
+  min-width: unset;
+}
+.shortListTable .rdt_Table .rdt_TableHead .rdt_TableHeadRow>div:nth-child(5){
+  width: 10%;
+  min-width: unset;
+}
+
+.shortListTable .rdt_Table .rdt_TableBody .rdt_TableRow>div:first-child{
+  width: 10%;
+  min-width: unset;
+}
+
+.shortListTable .rdt_Table .rdt_TableBody .rdt_TableRow>div:nth-child(2){
+  width: 8%;
+  min-width: unset;
+}
+
+.shortListTable .rdt_Table .rdt_TableBody .rdt_TableRow>div:nth-child(3){
+  width: 45%;
+  min-width: unset;
+}
+
+.shortListTable .rdt_Table .rdt_TableBody .rdt_TableRow>div:nth-child(4){
+  width: 25%;
+  min-width: unset;
+}
+.shortListTable .rdt_Table .rdt_TableBody .rdt_TableRow>div:nth-child(5){
+  width: 10%;
+  min-width: unset;
+}
+

@@ -1,10 +1,12 @@
 import { Hint } from 'react-autocomplete-hint';
 import Select from 'react-select';
+import UseContext from '../../contexts/UseContext';
 import { handleAddToListClick, handleOnFill, updateProductDetails } from "../../Helper/AddProductHandler";
 import { storeData } from "../../Helper/storeData";
 import Alert from "../../Libs/Alert";
 
-const InputFields = ({ modifiedProductList = [], productDetails = {}, setProductDetails = () => { }, warningMessage = '', options, title }) => {
+const InputFields = ({ modifiedProductList = [], productDetails = {}, setProductDetails = () => { }, options, title }) => {
+    const { alertMessage } = UseContext()
     const handleClear = (e) => {
         e.preventDefault();
         // give a alert to confirm the clear action
@@ -112,8 +114,8 @@ const InputFields = ({ modifiedProductList = [], productDetails = {}, setProduct
 
                 )
             }
-            {warningMessage.type === 'error' && <Alert message={warningMessage.message} className="bg-red-500" />}
-            {warningMessage.type === 'success' && <Alert message={warningMessage.message} className="bg-green-600" />}
+            {alertMessage.type === 'error' && <Alert message={alertMessage.message} className="bg-red-500" />}
+            {alertMessage.type === 'success' && <Alert message={alertMessage.message} className="bg-green-600" />}
             <div className="text-center">
                 <input
                     type="submit"

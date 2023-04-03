@@ -4,14 +4,14 @@ import LocalStorageProduct from "../../common/LocalStrorageProduct";
 import UseContext from "../../contexts/UseContext";
 import { deletePermanently, handleProductSubmit, margeArray, updateTheConstructor } from "../../Helper/AddProductHandler";
 import { storeData } from "../../Helper/storeData";
+
 function AddProductPage() {
     const [productDetails, setProductDetails] = useState({ quantity: 1 });
     const [localProducts, setLocalProducts] = useState([]);
     const [deletedProduct, setDeletedProduct] = useState([]);
     const [modifiedProductList, setModifiedProductList] = useState([]); // only for testing purpose .. need to change the name to label of database product
-    const { productList, user, setProductList, getProductList } = UseContext()
+    const { productList, user, setProductList, getProductList, alertMessage, setAlertMessage } = UseContext()
     const productLength = productList.length
-    const [warningMessage, setWarningMessage] = useState({ message: '', type: '' });
     const [isLoading, setIsLoading] = useState(false);
 
     // initial state to check the local storage for product list and deleted product list
@@ -26,24 +26,8 @@ function AddProductPage() {
 
     // to show the alert if the product is not filled
     useEffect(() => {
-        setWarningMessage('');
+        setAlertMessage({ message: '', type: '' });
     }, [productDetails]);
-
-    // remove the alert after 3 seconds
-    useEffect(() => {
-        if (warningMessage.type === 'error') {
-            setTimeout(() => {
-                setWarningMessage({ message: '', type: '' });
-            }, 3000);
-        }
-
-        if (warningMessage.type === 'success') {
-            setTimeout(() => {
-                setWarningMessage({ message: '', type: '' });
-                window.location.reload();
-            }, 10000);
-        }
-    }, [warningMessage.message]);
 
     useEffect(() => {
         const modifiedData = productList.map(product => {
@@ -59,7 +43,6 @@ function AddProductPage() {
 
     // demo product list for testing purpose will be updated with the database product list
     useEffect(() => {
-        console.log(localProducts);
         setModifiedProductList(margeArray(localProducts, modifiedProductList));
     }, [localProducts])
 
@@ -68,7 +51,7 @@ function AddProductPage() {
         updateTheConstructor(
             productDetails,
             setProductDetails,
-            setWarningMessage,
+            setAlertMessage,
             localProducts,
             setLocalProducts,
             deletedProduct,
@@ -81,7 +64,7 @@ function AddProductPage() {
             modifiedProductList,
             setModifiedProductList
         );
-    }, [productDetails, localProducts, deletedProduct, warningMessage, user, productList])
+    }, [productDetails, localProducts, deletedProduct, alertMessage, user, productList])
 
     return (
         <InputFieldsContainer
@@ -90,7 +73,6 @@ function AddProductPage() {
             modifiedProductList={modifiedProductList}
             productDetails={productDetails}
             setProductDetails={setProductDetails}
-            warningMessage={warningMessage}
             handleProductSubmit={handleProductSubmit}
             options={storeData.companyList}
         >

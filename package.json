@@ -14,10 +14,12 @@
     "firebase": "^9.17.2",
     "react": "^18.2.0",
     "react-autocomplete-hint": "^2.0.0",
+    "react-data-table-component": "^7.5.3",
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
     "react-router-dom": "^6.9.0",
-    "react-select": "^5.7.2"
+    "react-select": "^5.7.2",
+    "styled-components": "^5.3.9"
   },
   "devDependencies": {
     "@types/react": "^18.0.27",

@@ -12,7 +12,10 @@ export default function UseContext() {
         productList,
         setProductList,
         getProductList,
-        getStockProductList
+        getStockProductList,
+        setIsLoading,
+        alertMessage,
+        setAlertMessage
     } = useContext(AuthContext);
 
     return {
@@ -26,6 +29,9 @@ export default function UseContext() {
         productList,
         setProductList,
         getProductList,
-        getStockProductList
+        getStockProductList,
+        setIsLoading,
+        alertMessage,
+        setAlertMessage
     }
 }

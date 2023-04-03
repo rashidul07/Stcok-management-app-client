@@ -7,6 +7,7 @@ import Navbar from './components/common/Navbar';
 import AddProductPage from "./components/pages/AddProduct";
 import AddStock from "./components/pages/AddStock";
 import AddUser from "./components/pages/AddUser";
+import AllProducts from "./components/pages/AllProducts";
 import ErrorPage from './components/pages/Error';
 import Home from './components/pages/Home';
 import Login from './components/pages/Login';
@@ -16,7 +17,7 @@ const HeaderLayout = () => (
     <header>
       <Navbar />
     </header>
-    <div className="main-container">
+    <div className="main-container justify-center">
       <Outlet />
     </div>
     < Footer />
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
       {
         path: '/addStock',
         element: <AddStock />,
+      },
+      {
+        path: '/shortlist',
+        element: <AllProducts />,
       },
       {
         path: '/addUser',

@@ -6,7 +6,6 @@ const InputFieldsContainer = ({
     modifiedProductList,
     productDetails,
     setProductDetails,
-    warningMessage,
     options,
     children
 }) => {
@@ -17,7 +16,6 @@ const InputFieldsContainer = ({
                 modifiedProductList={modifiedProductList}
                 productDetails={productDetails}
                 setProductDetails={setProductDetails}
-                warningMessage={warningMessage}
                 options={options}
                 title={title}
             />

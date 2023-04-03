@@ -4,6 +4,7 @@ const API = {
     addProduct: 'http://localhost:5000/addProducts',
     addStockProduct: 'http://localhost:5000/addStockProduct',
     stockList: 'http://localhost:5000/stockProducts',
+    statusUpdate: 'http://localhost:5000/update',
 }
 
 // productList: 'https://rmcserver.cyclic.app/products',
@@ -21,7 +22,7 @@ export default async function fetchData(url, method, body = {}, params = {}) {
         }
     };
 
-    if (method === 'POST') {
+    if (method === 'POST' || method === 'PUT') {
         fetchOptions.body = JSON.stringify(body);
     } else if (method === 'GET') {
         url = new URL(url);

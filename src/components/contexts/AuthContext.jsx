@@ -11,13 +11,16 @@ export const AuthProvider = ({ children }) => {
   const auth = getAuth();
   const [isLoading, setIsLoading] = useState(false)
   const [productList, setProductList] = useState([])
+  const [currentDataType, setCurrentDataType] = useState('')
+  const [alertMessage, setAlertMessage] = useState({ message: '', type: '' });
 
   const getProductList = async () => {
-    if (user.email) {
+    if (user.email && currentDataType !== 'product') {
       setIsLoading(true)
       const response = await fetchData('productList', 'GET')
       if (response.status === 'success') {
         setProductList(response.data)
+        setCurrentDataType('product')
       }
       if (response.status === 'error') {
         setError(response);
@@ -27,11 +30,12 @@ export const AuthProvider = ({ children }) => {
   }
 
   const getStockProductList = async () => {
-    if (user.email) {
+    if (user.email && currentDataType !== 'stock') {
       setIsLoading(true)
       const response = await fetchData('stockList', 'GET')
       if (response.status === 'success') {
         setProductList(response.data)
+        setCurrentDataType('stock')
       }
       if (response.status === 'error') {
         setError(response);
@@ -110,6 +114,20 @@ export const AuthProvider = ({ children }) => {
     });
   }, [auth])
 
+  useEffect(() => {
+    if (alertMessage.type === 'error') {
+      setTimeout(() => {
+        setAlertMessage({ message: '', type: '' });
+      }, 3000);
+    }
+
+    if (alertMessage.type === 'success') {
+      setTimeout(() => {
+        setAlertMessage({ message: '', type: '' });
+      }, 10000);
+    }
+  }, [alertMessage.message]);
+
   const value = {
     error,
     user,
@@ -121,7 +139,10 @@ export const AuthProvider = ({ children }) => {
     productList,
     setProductList,
     getProductList,
-    getStockProductList
+    getStockProductList,
+    setIsLoading,
+    alertMessage,
+    setAlertMessage
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

@@ -8,11 +8,10 @@ import { storeData } from '../../Helper/storeData';
 export default function AddStock() {
   const [productDetails, setProductDetails] = useState({ quantity: 1, invoiceDiscount: 14.20, extraDiscount: 0 });
   const [modifiedProductList, setModifiedProductList] = useState([]);
-  const [warningMessage, setWarningMessage] = useState({ message: '', type: '' });
   const [localProducts, setLocalProducts] = useState([]);
   const [deletedProduct, setDeletedProduct] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { productList, user, getStockProductList, setProductList } = UseContext()
+  const { productList, user, getStockProductList, setProductList, alertMessage, setAlertMessage } = UseContext()
   const productLength = productList.length
 
   // initial state to check the local storage for product list and deleted product list
@@ -26,24 +25,8 @@ export default function AddStock() {
 
   // to show the alert if the product is not filled
   useEffect(() => {
-    setWarningMessage('');
+    setAlertMessage({ message: '', type: '' });
   }, [productDetails]);
-
-  // remove the alert after 3 seconds
-  useEffect(() => {
-    if (warningMessage.type === 'error') {
-      setTimeout(() => {
-        setWarningMessage({ message: '', type: '' });
-      }, 3000);
-    }
-
-    if (warningMessage.type === 'success') {
-      setTimeout(() => {
-        setWarningMessage({ message: '', type: '' });
-        window.location.reload();
-      }, 10000);
-    }
-  }, [warningMessage.message]);
 
   useEffect(() => {
     setModifiedProductList(margeArray(localProducts, productList));
@@ -57,7 +40,7 @@ export default function AddStock() {
     updateTheConstructor(
       productDetails,
       setProductDetails,
-      setWarningMessage,
+      setAlertMessage,
       localProducts,
       setLocalProducts,
       deletedProduct,
@@ -68,7 +51,7 @@ export default function AddStock() {
       setProductList,
       'stock'
     );
-  }, [productDetails, localProducts, deletedProduct, warningMessage, user, productList])
+  }, [productDetails, localProducts, deletedProduct, alertMessage, user, productList])
 
   return (
     <>
@@ -79,7 +62,6 @@ export default function AddStock() {
         productDetails={productDetails}
         setProductDetails={setProductDetails}
         modifiedProductList={modifiedProductList}
-        warningMessage={warningMessage}
       >
         <LocalStorageProduct localProducts={localProducts} storageName="stockList" setLocalProducts={setLocalProducts} buttonText="Submit" isLoading={isLoading} btnOnClick={handleProductSubmit} />
       </InputFieldsContainer>

@@ -42,6 +42,7 @@
 .shortListTable .rdt_Table .rdt_TableHead .rdt_TableHeadRow>div:first-child{
   width: 10%;
   min-width: unset;
+  padding-left: 15px;
 }
 
 .shortListTable .rdt_Table .rdt_TableHead .rdt_TableHeadRow>div:nth-child(2){
@@ -66,6 +67,7 @@
 .shortListTable .rdt_Table .rdt_TableBody .rdt_TableRow>div:first-child{
   width: 10%;
   min-width: unset;
+  padding-left: 15px;
 }
 
 .shortListTable .rdt_Table .rdt_TableBody .rdt_TableRow>div:nth-child(2){
@@ -85,5 +87,11 @@
 .shortListTable .rdt_Table .rdt_TableBody .rdt_TableRow>div:nth-child(5){
   width: 10%;
   min-width: unset;
+}
+
+.copyButton{
+  position: absolute;
+  right: -3%;
+  top: 5%;
 }
 

@@ -1,0 +1,233 @@
+import fetchData from "./HandleApi"
+import { storeData } from "./storeData"
+
+class ProductHandler {
+    updateAllProductConstructor = (
+        selectedCompany,
+        setSelectedCompany,
+        products,
+        setProducts,
+        productList,
+        setProductList,
+        TextareaValue,
+        setTextareaValue,
+        selectedProducts,
+        setSelectedProducts,
+        setAlertMessage,
+        setIsTableLoading,
+        setToggleClearRows,
+        editableRowData,
+        setEditableRowData,
+        user
+    ) => {
+        this.selectedCompany = selectedCompany
+        this.setSelectedCompany = setSelectedCompany
+        this.products = products
+        this.setProducts = setProducts
+        this.productList = productList
+        this.setProductList = setProductList
+        this.TextareaValue = TextareaValue
+        this.setTextareaValue = setTextareaValue
+        this.selectedProducts = selectedProducts
+        this.setSelectedProducts = setSelectedProducts
+        this.setAlertMessage = setAlertMessage
+        this.setIsTableLoading = setIsTableLoading
+        this.setToggleClearRows = setToggleClearRows
+        this.editableRowData = editableRowData
+        this.setEditableRowData = setEditableRowData
+        this.user = user
+    }
+
+    updateProductsAndProductList = () => {
+
+    }
+
+    handleCompanyChange = () => {
+        console.log(this.selectedCompany);
+        if (this.selectedCompany?.value === '') {
+            this.setProducts(this.productList)
+        }
+
+        if (this.selectedCompany && this.selectedCompany?.value !== '') {
+            const filteredProducts = this.productList.filter(product => product.company === this.selectedCompany.value)
+            this.setProducts(filteredProducts)
+        }
+    }
+
+    prepareTextareaValue = () => {
+        if (!this.selectedProducts || this.selectedProducts?.length === 0) {
+            return
+        }
+        const selectedProductList = this.selectedProducts.map(product => {
+            return (
+                `${product.name} -- ${product.quantity}`
+            )
+        })
+        this.setTextareaValue(selectedProductList.join('\n'))
+    }
+
+    handleSelection = ({ selectedRows }) => {
+        this.setSelectedProducts(selectedRows)
+    };
+
+    handleTextarea = (event) => {
+        this.setTextareaValue(event.target.value)
+    }
+
+    handleCopy = () => {
+        navigator.clipboard.writeText(this.TextareaValue)
+        this.setAlertMessage({ message: 'Copied to clipboard', type: 'success' })
+    }
+
+    handleUpdate = async () => {
+        this.setIsTableLoading(true);
+        if (window.confirm('Want to update the status')) {
+            const list = this.selectedProducts.map(product => {
+                return {
+                    _id: product._id,
+                    status: product.status === 'complete' ? 'pending' : 'complete'
+                }
+            })
+            const response = await fetchData('statusUpdate', 'PUT', list)
+
+            if (response.status === 'success') {
+                this.setSelectedProducts([])
+                this.setTextareaValue(null)
+                this.setToggleClearRows(true)
+                this.setAlertMessage({ message: `${response.data.nModified} Status updated successfully`, type: 'success' })
+                //change the status of the products as same as selected products
+                const updatedProductList = this.productList.map(product => {
+                    const selectedProduct = this.selectedProducts.find(selectedProduct => selectedProduct._id === product._id)
+                    if (selectedProduct) {
+                        return {
+                            ...product,
+                            status: selectedProduct.status === 'complete' ? 'pending' : 'complete'
+                        }
+                    }
+                    return product
+                })
+
+                const updatedProducts = this.products.map(product => {
+                    const selectedProduct = this.selectedProducts.find(selectedProduct => selectedProduct._id === product._id)
+                    if (selectedProduct) {
+                        return {
+                            ...product,
+                            status: selectedProduct.status === 'complete' ? 'pending' : 'complete'
+                        }
+                    }
+                    return product
+                })
+
+                this.setProducts(updatedProducts)
+                this.setProductList(updatedProductList)
+                this.setSelectedCompany(this.selectedCompany)
+            }
+            else {
+                this.setAlertMessage({ message: response.message, type: 'error' })
+            }
+        }
+        this.setIsTableLoading(false);
+    }
+    handleSetCompany = (company) => {
+        this.setSelectedCompany(company)
+    }
+
+    handleRowClicked = (row) => {
+        this.setEditableRowData(row);
+        //there is a cheekbox wiich id is "my-modal" in the table. I want to click it when a row is clicked. do it react way
+        const modal = document.getElementById("my-modal");
+        modal.click();
+    }
+
+    handleSetEditableRowData = (data) => {
+        this.setEditableRowData({ ...data, updated_at: new Date().toISOString(), updated_by: this.user?.email })
+    }
+
+    handleProductEdit = async () => {
+        if (!this.editableRowData.name || !this.editableRowData.quantity || !this.editableRowData.status) {
+            alert('Please fill all the fields')
+            return
+        }
+        this.setIsTableLoading(true);
+        const response = await fetchData('productUpdate', 'PUT', this.editableRowData)
+        if (response.status === 'success') {
+            this.setAlertMessage({ message: 'Product updated successfully', type: 'success' })
+            //change the status of the products as same as selected products
+            const updatedProducts = this.products.map(product => {
+                if (product._id === this.editableRowData._id) {
+                    return this.editableRowData
+                }
+                return product
+            })
+
+            const updatedProductList = this.productList.map(product => {
+                if (product._id === this.editableRowData._id) {
+                    return this.editableRowData
+                }
+                return product
+            })
+            this.setProducts(updatedProducts)
+            this.setProductList(updatedProductList)
+            const companyDetails = storeData.companyList.find(company => company.value === this.editableRowData.company)
+            this.setSelectedCompany(companyDetails)
+            this.setEditableRowData({})
+            const modal = document.getElementById("my-modal");
+            modal.click();
+        }
+        else {
+            this.setAlertMessage({ message: response.message, type: 'error' })
+        }
+        this.setIsTableLoading(false);
+    }
+
+    handleSelectedProductDelete = async () => {
+        if (window.confirm(`Want to delete ${this.selectedProducts.length} products`)) {
+            this.setIsTableLoading(true);
+            const response = await fetchData('productDelete', 'DELETE', this.selectedProducts)
+            if (response.status === 'success') {
+                this.setAlertMessage({ message: `${response.data.deletedCount} Products deleted successfully`, type: 'success' })
+                //change the status of the products as same as selected products
+                const updatedProducts = this.products.filter(product => {
+                    const selectedProduct = this.selectedProducts.find(selectedProduct => selectedProduct._id === product._id)
+                    if (selectedProduct) {
+                        return false
+                    }
+                    return true
+                })
+
+                const updatedProductList = this.productList.filter(product => {
+                    const selectedProduct = this.selectedProducts.find(selectedProduct => selectedProduct._id === product._id)
+                    if (selectedProduct) {
+                        return false
+                    }
+                    return true
+                })
+                this.setProducts(updatedProducts)
+                this.setProductList(updatedProductList)
+                this.setSelectedCompany(this.selectedCompany)
+                this.setSelectedProducts([])
+                this.setTextareaValue(null)
+                this.setToggleClearRows(true)
+            }
+            else {
+                this.setAlertMessage({ message: response.message, type: 'error' })
+            }
+            this.setIsTableLoading(false);
+        }
+    }
+}
+
+export const {
+    updateAllProductConstructor,
+    handleCompanyChange,
+    prepareTextareaValue,
+    handleSelection,
+    handleTextarea,
+    handleCopy,
+    handleUpdate,
+    handleSetCompany,
+    handleRowClicked,
+    handleSetEditableRowData,
+    handleProductEdit,
+    handleSelectedProductDelete
+} = new ProductHandler();

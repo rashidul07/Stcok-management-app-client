@@ -55,7 +55,7 @@ const TableSettings = {
         {
             when: row => row.status === 'complete',
             style: {
-                backgroundColor: 'green',
+                backgroundColor: '#ABC4AA',
                 color: 'white',
             },
         },

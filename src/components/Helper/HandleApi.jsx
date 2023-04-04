@@ -1,18 +1,21 @@
 
+// const API = {
+//     productList: 'https://rmcserver.cyclic.app/products',
+//     addProduct: 'https://rmcserver.cyclic.app/addProducts',
+//     addStockProduct: 'https://rmcserver.cyclic.app/addStockProduct',
+//     stockList: 'https://rmcserver.cyclic.app/stockProducts',
+//     statusUpdate: 'https://rmcserver.cyclic.app/update',
+// }
+
 const API = {
     productList: 'http://localhost:5000/products',
     addProduct: 'http://localhost:5000/addProducts',
     addStockProduct: 'http://localhost:5000/addStockProduct',
     stockList: 'http://localhost:5000/stockProducts',
     statusUpdate: 'http://localhost:5000/update',
+    productUpdate: 'http://localhost:5000/productUpdate',
+    productDelete: 'http://localhost:5000/product',
 }
-
-// productList: 'https://rmcserver.cyclic.app/products',
-//     addProduct: 'https://rmcserver.cyclic.app/addProducts',
-//     addStockProduct: 'https://rmcserver.cyclic.app/addStockProduct',
-//     stockList: 'https://rmcserver.cyclic.app/stockProducts',
-//statusUpdate: 'https://rmcserver.cyclic.app/update',
-
 
 export default async function fetchData(url, method, body = {}, params = {}) {
     method = method?.toUpperCase() || 'GET';
@@ -24,7 +27,7 @@ export default async function fetchData(url, method, body = {}, params = {}) {
         }
     };
 
-    if (method === 'POST' || method === 'PUT') {
+    if (method === 'POST' || method === 'PUT' || method === 'DELETE') {
         fetchOptions.body = JSON.stringify(body);
     } else if (method === 'GET') {
         url = new URL(url);

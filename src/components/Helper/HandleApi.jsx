@@ -1,21 +1,17 @@
-
-// const API = {
-//     productList: 'https://rmcserver.cyclic.app/products',
-//     addProduct: 'https://rmcserver.cyclic.app/addProducts',
-//     addStockProduct: 'https://rmcserver.cyclic.app/addStockProduct',
-//     stockList: 'https://rmcserver.cyclic.app/stockProducts',
-//     statusUpdate: 'https://rmcserver.cyclic.app/update',
-// }
-
 const API = {
-    productList: 'http://localhost:5000/products',
-    addProduct: 'http://localhost:5000/addProducts',
-    addStockProduct: 'http://localhost:5000/addStockProduct',
-    stockList: 'http://localhost:5000/stockProducts',
-    statusUpdate: 'http://localhost:5000/update',
-    productUpdate: 'http://localhost:5000/productUpdate',
-    productDelete: 'http://localhost:5000/product',
+    productList: 'https://rmcserver.cyclic.app/getProducts',
+    addProduct: 'https://rmcserver.cyclic.app/addProducts',
+    productDelete: 'https://rmcserver.cyclic.app/deleteProducts',
+    stockList: 'https://rmcserver.cyclic.app/getStockProducts',
+    addStockProduct: 'https://rmcserver.cyclic.app/addStockProduct',
 }
+// const API = {
+//     productList: 'http://localhost:5000/getProducts',
+//     addProduct: 'http://localhost:5000/addProducts',
+//     productDelete: 'http://localhost:5000/deleteProducts',
+//     stockList: 'http://localhost:5000/getStockProducts',
+//     addStockProduct: 'http://localhost:5000/addStockProduct',
+// }
 
 export default async function fetchData(url, method, body = {}, params = {}) {
     method = method?.toUpperCase() || 'GET';

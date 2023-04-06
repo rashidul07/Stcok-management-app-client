@@ -11,6 +11,7 @@ import AllProducts from "./components/pages/AllProducts";
 import ErrorPage from './components/pages/Error';
 import Home from './components/pages/Home';
 import Login from './components/pages/Login';
+import StockProducts from "./components/pages/StockProducts";
 
 const HeaderLayout = () => (
   <>
@@ -45,8 +46,12 @@ const router = createBrowserRouter([
         element: <AddStock />,
       },
       {
-        path: '/shortlist',
+        path: '/shortProducts',
         element: <AllProducts />,
+      },
+      {
+        path: '/stockProducts',
+        element: <StockProducts />,
       },
       {
         path: '/addUser',

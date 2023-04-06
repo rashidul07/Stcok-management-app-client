@@ -70,7 +70,7 @@ const ProductAddForm = ({ productType }) => {
             user,
             productList,
             setProductList,
-            'product',
+            productType,
             modifiedProductList,
             setModifiedProductList
         );

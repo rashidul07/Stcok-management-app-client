@@ -32,7 +32,8 @@ const TableSettings = {
             </div>
         )
     },
-    columns: [
+    stockProductExpandedComponent: ({ data }) => { },
+    shortProductColumns: [
         {
             name: 'Name',
             selector: row => row.name,
@@ -51,9 +52,43 @@ const TableSettings = {
             className: 'table-column quantity',
         }
     ],
+    stockProductColumns: [
+        {
+            name: 'Name',
+            selector: row => row.name,
+            sortable: true,
+            sortFunction: caseInsensitiveSort,
+            className: 'table-column name',
+        },
+        {
+            name: 'Company',
+            selector: row => row.company,
+            className: 'table-column company',
+        },
+        {
+            name: 'Q',
+            selector: row => row.quantity,
+            className: 'table-column quantity',
+        },
+        {
+            name: 'price',
+            selector: row => row.price,
+            className: 'table-column price',
+        },
+        {
+            name: 'PA I/D',
+            selector: row => row.invoiceDiscountPrice + '(' + row.invoiceDiscount + ')',
+            className: 'table-column invoice',
+        },
+        {
+            name: 'PA A/D',
+            selector: row => row.extraDiscountPrice,
+            className: 'table-column extra',
+        }
+    ],
     conditionalRowStyles: [
         {
-            when: row => row.status === 'complete',
+            when: row => row?.status === 'complete',
             style: {
                 backgroundColor: '#ABC4AA',
                 color: 'white',

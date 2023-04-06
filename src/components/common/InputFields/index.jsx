@@ -106,7 +106,7 @@ const InputFields = ({ modifiedProductList = [], productDetails = {}, setProduct
                                 id="extraDiscount"
                                 type="number"
                                 value={productDetails?.extraDiscount !== null
-                                    ? productDetails?.extraDiscount
+                                    ? (productDetails?.extraDiscount || '')
                                     : ''}
                                 onChange={(event) => updateProductDetails('extraDiscount', Number(event.target.value))}
                                 className="font-bold bg-white py-1 px-2 rounded-md border-gray-600 my-1 border-2 text-amber-500 w-full"

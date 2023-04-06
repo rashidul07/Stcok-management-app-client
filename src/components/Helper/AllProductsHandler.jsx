@@ -88,13 +88,13 @@ class ProductHandler {
                     status: product.status === 'complete' ? 'pending' : 'complete'
                 }
             })
-            const response = await fetchData('statusUpdate', 'PUT', list)
+            const response = await fetchData('addProduct', 'POST', { productsCollection: list })
 
             if (response.status === 'success') {
                 this.setSelectedProducts([])
                 this.setTextareaValue(null)
                 this.setToggleClearRows(true)
-                this.setAlertMessage({ message: `${response.data.nModified} Status updated successfully`, type: 'success' })
+                this.setAlertMessage({ message: `${response.data.modifiedCount} Status updated successfully`, type: 'success' })
                 //change the status of the products as same as selected products
                 const updatedProductList = this.productList.map(product => {
                     const selectedProduct = this.selectedProducts.find(selectedProduct => selectedProduct._id === product._id)
@@ -129,6 +129,7 @@ class ProductHandler {
         this.setIsTableLoading(false);
     }
     handleSetCompany = (company) => {
+        console.log(company);
         this.setSelectedCompany(company)
     }
 
@@ -149,7 +150,7 @@ class ProductHandler {
             return
         }
         this.setIsTableLoading(true);
-        const response = await fetchData('productUpdate', 'PUT', this.editableRowData)
+        const response = await fetchData('addProduct', 'POST', { productsCollection: [this.editableRowData] })
         if (response.status === 'success') {
             this.setAlertMessage({ message: 'Product updated successfully', type: 'success' })
             //change the status of the products as same as selected products

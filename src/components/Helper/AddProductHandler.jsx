@@ -58,8 +58,9 @@ class AddProductHandler {
     }
 
     updateProductDataForServer = (type) => {
+        let productList;
         if (type === 'databaseProduct') {
-            const productList =
+            productList =
                 [...this.localProducts,
                 {
                     ...this.productDetails,
@@ -70,11 +71,10 @@ class AddProductHandler {
                     updated_by: this.user.email,
                 }
                 ];
-            return productList;
         } else if (type === 'localProduct') {
             const updatedProductIndex = this.localProducts.findIndex(p => p.rId === this.productDetails.rId);
-            const updatedProductList = [...this.localProducts];
-            updatedProductList[updatedProductIndex] = {
+            productList = [...this.localProducts];
+            productList[updatedProductIndex] = {
                 ...this.productDetails,
                 label: this.productDetails.label.trim(),
                 name: this.productDetails.label.trim(),
@@ -82,10 +82,9 @@ class AddProductHandler {
                 updated_at: new Date().toISOString(),
                 updated_by: this.user.email,
             }
-            return updatedProductList;
         } else {
             const id = `${Math.random().toString(36).replace('0.', '')}${Date.now().toString(36)}`;
-            const productList =
+            productList =
                 [...this.localProducts,
                 {
                     rId: id, ...this.productDetails,
@@ -99,8 +98,21 @@ class AddProductHandler {
                     status: 'pending'
                 }
                 ];
-            return productList;
         }
+        if (this.type === 'stock') {
+            const lastProductIndex = productList.length - 1;
+            const lastProduct = productList[lastProductIndex];
+            const invoiceDiscountPrice = (lastProduct.price - (lastProduct.price * lastProduct.invoiceDiscount / 100)).toFixed(2);
+            const extraDiscountPrice = (invoiceDiscountPrice - (invoiceDiscountPrice * lastProduct.extraDiscount / 100)).toFixed(2);
+            const totalPrice = (extraDiscountPrice * lastProduct.quantity).toFixed(2);
+            productList[lastProductIndex] = {
+                ...lastProduct,
+                invoiceDiscountPrice: Number(invoiceDiscountPrice),
+                extraDiscountPrice: Number(extraDiscountPrice),
+                totalPrice: Number(totalPrice),
+            }
+        }
+        return productList;
     }
 
     handleAddToListClick = (e) => {
@@ -131,7 +143,7 @@ class AddProductHandler {
         } else {
             productList = this.updateProductDataForServer('newProduct');
         }
-
+        console.log(productList);
         this.setLocalProducts(productList);
 
         if (this.type === 'stock') {
@@ -139,8 +151,6 @@ class AddProductHandler {
             this.setProductDetails({
                 label: '',
                 company: this.productDetails.company,
-                quantity: this.productDetails.quantity,
-                price: this.productDetails.price,
                 invoiceDiscount: this.productDetails.invoiceDiscount,
                 extraDiscount: this.productDetails.extraDiscount,
             });

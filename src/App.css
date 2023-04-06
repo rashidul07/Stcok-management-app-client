@@ -23,9 +23,7 @@
   background-color: #0a0a0af3 ;
   color: #fff;
 }
-.shortListTable{
-  overflow-x: hidden !important;
-}
+
 .shortListTable .rdt_Table .rdt_TableBody .rdt_TableRow>div{
   flex: none;
   min-width: unset;

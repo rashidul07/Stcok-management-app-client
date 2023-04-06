@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import Select from 'react-select';
 import UseContext from "../../contexts/UseContext";
-import { handleCopy, handleRowClicked, handleSelectedProductDelete, handleSelection, handleSetCompany, handleTextarea, handleUpdate } from '../../Helper/AllProductsHandler';
+import { handleCompanyChange, handleCopy, handleRowClicked, handleSelectedProductDelete, handleSelection, handleSetCompany, handleTextarea, handleUpdate, prepareTextareaValue, updateAllProductConstructor } from '../../Helper/AllProductsHandler';
 import { storeData } from '../../Helper/storeData';
 import Alert from '../../Libs/Alert';
 import { Indicator } from "../../Libs/Indicator";
@@ -10,9 +10,48 @@ import ProductEditModal from '../../Libs/ProductEditModal';
 import Spinner from "../../Libs/Spinner";
 import TableSettings from '../../pages/AllProducts/TableSettings';
 
-const DisplayProduct = ({ products, selectedProducts, selectedCompany, toggledClearRows, TextareaValue, isTableLoading, editableRowData }) => {
-    const { isLoading, productList, alertMessage } = UseContext();
+const DisplayProduct = ({ type }) => {
+    const { productList, user, setProductList, alertMessage, setAlertMessage, isLoading, getProductList, getStockProductList } = UseContext()
     const [mode, setMode] = useState('Update Mode');
+    const [selectedCompany, setSelectedCompany] = useState(null)
+    const [products, setProducts] = useState(productList)
+    const [selectedProducts, setSelectedProducts] = useState([])
+    const [TextareaValue, setTextareaValue] = useState(null)
+    const [isTableLoading, setIsTableLoading] = useState(false)
+    const [toggledClearRows, setToggleClearRows] = useState(false);
+    const [editableRowData, setEditableRowData] = useState({})
+    console.log(products);
+    useEffect(() => {
+        updateAllProductConstructor(
+            selectedCompany,
+            setSelectedCompany,
+            products,
+            setProducts,
+            productList,
+            setProductList,
+            TextareaValue,
+            setTextareaValue,
+            selectedProducts,
+            setSelectedProducts,
+            setAlertMessage,
+            setIsTableLoading,
+            setToggleClearRows,
+            editableRowData,
+            setEditableRowData,
+            user
+        )
+    }, [selectedCompany, products, TextareaValue, productList, selectedProducts, editableRowData])
+
+    useEffect(() => { type === 'shortProducts' ? getProductList() : getStockProductList() }, [user]);
+
+    useEffect(() => { if (selectedCompany === null) setProducts(productList) }, [productList])
+
+    useEffect(() => { handleCompanyChange() }, [selectedCompany])
+
+    useEffect(() => { if (toggledClearRows === true) setToggleClearRows(false) }, [toggledClearRows])
+
+    useEffect(() => { prepareTextareaValue() }, [selectedProducts])
+
     const handleModeChange = (event) => {
         if (event.target.checked === false) {
             setMode('Delete Mode')
@@ -20,6 +59,7 @@ const DisplayProduct = ({ products, selectedProducts, selectedCompany, toggledCl
             setMode('Update Mode')
         }
     };
+
     return (
         isLoading ?
             <div className="w-full md:w-2/3 lg:w-2/3 flex flex-col items-center justify-center overflow-hidden">
@@ -40,7 +80,7 @@ const DisplayProduct = ({ products, selectedProducts, selectedCompany, toggledCl
                                     value={selectedCompany || storeData.companyList[0]}
                                     onChange={(value) => handleSetCompany(value)}
                                     className="font-bold bg-white py-1 px-2 rounded-md border-gray-600 my-2 border-2 text-amber-500 w-72"
-                                    options={storeData.companyList}
+                                    options={type === 'shortProducts' ? storeData.companyList : storeData.stockCompanyList}
                                 />
                                 <div className="form-control w-40">
                                     <label className="cursor-pointer label">
@@ -52,11 +92,11 @@ const DisplayProduct = ({ products, selectedProducts, selectedCompany, toggledCl
                         )
                     }
                     <DataTable
-                        columns={TableSettings.columns}
+                        columns={type === 'shortProducts' ? TableSettings.shortProductColumns : TableSettings.stockProductColumns}
                         data={products}
                         expandableRows
                         expandableRowsComponent={TableSettings.ExpandedComponent}
-                        className="shortListTable"
+                        className={type === 'shortProducts' ? 'shortListTable' : 'stockListTable'}
                         selectableRows
                         selectableRowsHighlight
                         onSelectedRowsChange={handleSelection}
@@ -69,12 +109,18 @@ const DisplayProduct = ({ products, selectedProducts, selectedCompany, toggledCl
                     {
                         selectedProducts.length > 0 &&
                         <div className="relative w-3/4 mb-3">
-                            <textarea className="textarea relative textarea-primary bg-white text-black my-4 w-full resize-y" value={TextareaValue || ''} onChange={handleTextarea} ></textarea>
-                            <button className="btn btn-circle copyButton order-none" style={{ backgroundColor: "transparent", borderColor: "transparent", boxShadow: "none", color: "inherit", outline: "none" }} onClick={handleCopy}>
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 6H5a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-4M16 2H9a2 2 0 00-2 2v12a2 2 0 002 2h7m5-5H9a2 2 0 00-2 2m2-2h2m-2 2h2m-2 2h2m5-5a2 2 0 01-2 2m-2-2h2m-2 2h2" />
-                                </svg>
-                            </button>
+                            {
+                                type === 'shortProducts' ? (
+                                    <>
+                                        <textarea className="textarea relative textarea-primary bg-white text-black my-4 w-full resize-y" value={TextareaValue || ''} onChange={handleTextarea} ></textarea>
+                                        <button className="btn btn-circle copyButton order-none" style={{ backgroundColor: "transparent", borderColor: "transparent", boxShadow: "none", color: "inherit", outline: "none" }} onClick={handleCopy}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 6H5a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-4M16 2H9a2 2 0 00-2 2v12a2 2 0 002 2h7m5-5H9a2 2 0 00-2 2m2-2h2m-2 2h2m-2 2h2m5-5a2 2 0 01-2 2m-2-2h2m-2 2h2" />
+                                            </svg>
+                                        </button>
+                                    </>
+                                ) : ''
+                            }
                             <button className={`btn w-full btn-primary outline ${isTableLoading ? "loading" : ""}`} onClick={mode === 'Update Mode' ? handleUpdate : handleSelectedProductDelete}>{mode === 'Update Mode' ? 'Update Status' : 'Delete Products'}</button>
                         </div>
                     }

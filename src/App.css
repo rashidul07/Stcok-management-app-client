@@ -20,8 +20,8 @@
 }
 
 .rdt_Table .rdt_TableHead .rdt_TableHeadRow {
-  background-color: #0a0a0af3 ;
-  color: #fff;
+  background-color: #070000 ;
+  color: #ffffff;
 }
 
 .shortListTable .rdt_Table .rdt_TableBody .rdt_TableRow>div{
@@ -85,6 +85,16 @@
 .shortListTable .rdt_Table .rdt_TableBody .rdt_TableRow>div:nth-child(5){
   width: 10%;
   min-width: unset;
+}
+
+.stockListTable .dpxigv {
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+}
+
+.stockListTable .dqfNny {
+  padding-left: 5px !important;
+  padding-right: 5px !important;
 }
 
 .copyButton{

@@ -57,6 +57,14 @@ class AddProductHandler {
         this.setProductDetails(newProductDetails);
     }
 
+    updateProductPrice = (product) => {
+        const invoiceDiscountPrice = Number((product.price - (product.price * product.invoiceDiscount / 100)).toFixed(2));
+        const extraDiscountPrice = Number((invoiceDiscountPrice - (invoiceDiscountPrice * product.extraDiscount / 100)).toFixed(2));
+        const totalPrice = Number((extraDiscountPrice * (product.quantity + (product.quantityHome || 0))).toFixed(2));
+        const newProductDetails = { ...product, invoiceDiscountPrice, extraDiscountPrice, totalPrice };
+        return newProductDetails;
+    }
+
     updateProductDataForServer = (type) => {
         let productList;
         if (type === 'databaseProduct') {
@@ -104,7 +112,7 @@ class AddProductHandler {
             const lastProduct = productList[lastProductIndex];
             const invoiceDiscountPrice = (lastProduct.price - (lastProduct.price * lastProduct.invoiceDiscount / 100)).toFixed(2);
             const extraDiscountPrice = (invoiceDiscountPrice - (invoiceDiscountPrice * lastProduct.extraDiscount / 100)).toFixed(2);
-            const totalPrice = (extraDiscountPrice * lastProduct.quantity).toFixed(2);
+            const totalPrice = (extraDiscountPrice * (lastProduct.quantity + (lastProduct.quantityHome || 0))).toFixed(2);
             productList[lastProductIndex] = {
                 ...lastProduct,
                 invoiceDiscountPrice: Number(invoiceDiscountPrice),
@@ -153,6 +161,7 @@ class AddProductHandler {
                 company: this.productDetails.company,
                 invoiceDiscount: this.productDetails.invoiceDiscount,
                 extraDiscount: this.productDetails.extraDiscount,
+                quantity: this.productDetails.quantity,
             });
         }
 
@@ -202,7 +211,7 @@ class AddProductHandler {
         this.setIsLoading(true);
         const confirmBox = window.confirm(`Submit All Products?`);
         if (confirmBox === true) {
-            const response = await fetchData(this.type === "product" ? 'addProduct' : 'addStockProduct', 'POST', { productsCollection: this.localProducts })
+            const response = await fetchData('addProduct', 'POST', { productsCollection: this.localProducts }, { type: this.type, user: this.user.email })
             if (response.status === 'success') {
                 this.setProductList(this.margeArray(this.localProducts, this.productList));
                 this.setAlertMessage({ message: `New ${response.data?.insertedCount || 0} & Updated ${response.data?.modifiedCount || 0} added.`, type: 'success' });
@@ -243,5 +252,7 @@ export const {
     handleProductSubmit,
     handleOnFill,
     margeArray,
-    handleRestore } = new AddProductHandler();
+    handleRestore,
+    updateProductPrice
+} = new AddProductHandler();
 

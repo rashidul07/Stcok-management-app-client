@@ -1,4 +1,5 @@
 import Select from 'react-select';
+import { updateProductPrice } from '../../Helper/AddProductHandler';
 import { storeData } from '../../Helper/storeData';
 import './localStorage.css';
 const EditableField = ({ product, localProducts, setLocalProducts, storageName }) => {
@@ -54,7 +55,8 @@ const EditableField = ({ product, localProducts, setLocalProducts, storageName }
                             type="number"
                             value={product.price}
                             onChange={(e) => {
-                                const updatedProduct = { ...product, price: e.target.value };
+                                const modifiedProduct = { ...product, price: Number(e.target.value) };
+                                const updatedProduct = updateProductPrice(modifiedProduct)
                                 const updatedProducts = localProducts.map(p => p.rId === product.rId ? updatedProduct : p);
                                 localStorage.setItem(storageName, JSON.stringify(updatedProducts));
                                 setLocalProducts(updatedProducts);
@@ -65,7 +67,8 @@ const EditableField = ({ product, localProducts, setLocalProducts, storageName }
                             type="number"
                             value={product.invoiceDiscount}
                             onChange={(e) => {
-                                const updatedProduct = { ...product, invoiceDiscount: e.target.value };
+                                const modifiedProduct = { ...product, invoiceDiscount: Number(e.target.value) };
+                                const updatedProduct = updateProductPrice(modifiedProduct)
                                 const updatedProducts = localProducts.map(p => p.rId === product.rId ? updatedProduct : p);
                                 localStorage.setItem(storageName, JSON.stringify(updatedProducts));
                                 setLocalProducts(updatedProducts);
@@ -76,7 +79,8 @@ const EditableField = ({ product, localProducts, setLocalProducts, storageName }
                             type="number"
                             value={product.extraDiscount}
                             onChange={(e) => {
-                                const updatedProduct = { ...product, extraDiscount: e.target.value };
+                                const modifiedProduct = { ...product, extraDiscount: Number(e.target.value) };
+                                const updatedProduct = updateProductPrice(modifiedProduct)
                                 const updatedProducts = localProducts.map(p => p.rId === product.rId ? updatedProduct : p);
                                 localStorage.setItem(storageName, JSON.stringify(updatedProducts));
                                 setLocalProducts(updatedProducts);
@@ -90,7 +94,8 @@ const EditableField = ({ product, localProducts, setLocalProducts, storageName }
                 type="number"
                 value={product.quantity}
                 onChange={(e) => {
-                    const updatedProduct = { ...product, quantity: e.target.value };
+                    const modifiedProduct = { ...product, quantity: Number(e.target.value) };
+                    const updatedProduct = updateProductPrice(modifiedProduct)
                     const updatedProducts = localProducts.map(p => p.rId === product.rId ? updatedProduct : p);
                     localStorage.setItem(storageName, JSON.stringify(updatedProducts));
                     setLocalProducts(updatedProducts);

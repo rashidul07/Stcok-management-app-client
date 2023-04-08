@@ -75,6 +75,18 @@ const InputFields = ({ modifiedProductList = [], productDetails = {}, setProduct
                 title === 'Stock' && (
                     <>
                         <div>
+                            <label htmlFor="quantityHome" className="block font-medium">
+                                Quantity (Home)
+                            </label>
+                            <input
+                                id="quantityHome"
+                                type="number"
+                                value={productDetails?.quantityHome || 0}
+                                onChange={(event) => updateProductDetails('quantityHome', Number(event.target.value))}
+                                className="font-bold bg-white py-1 px-2 rounded-md border-gray-600 my-1 border-2 text-amber-500 w-full"
+                            />
+                        </div>
+                        <div>
                             <label htmlFor="price" className="block font-medium">
                                 MRP Price
                             </label>

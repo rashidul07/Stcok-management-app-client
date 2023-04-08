@@ -18,7 +18,8 @@ class ProductHandler {
         setToggleClearRows,
         editableRowData,
         setEditableRowData,
-        user
+        user,
+        type
     ) => {
         this.selectedCompany = selectedCompany
         this.setSelectedCompany = setSelectedCompany
@@ -35,7 +36,8 @@ class ProductHandler {
         this.setToggleClearRows = setToggleClearRows
         this.editableRowData = editableRowData
         this.setEditableRowData = setEditableRowData
-        this.user = user
+        this.user = user,
+            this.type = type
     }
 
     updateProductsAndProductList = () => {
@@ -88,7 +90,7 @@ class ProductHandler {
                     status: product.status === 'complete' ? 'pending' : 'complete'
                 }
             })
-            const response = await fetchData('addProduct', 'POST', { productsCollection: list })
+            const response = await fetchData('addProduct', 'POST', { productsCollection: list }, { type: this.type, user: this.user.email })
 
             if (response.status === 'success') {
                 this.setSelectedProducts([])
@@ -150,7 +152,7 @@ class ProductHandler {
             return
         }
         this.setIsTableLoading(true);
-        const response = await fetchData('addProduct', 'POST', { productsCollection: [this.editableRowData] })
+        const response = await fetchData('addProduct', 'POST', { productsCollection: [this.editableRowData] }, { type: this.type, user: this.user.email })
         if (response.status === 'success') {
             this.setAlertMessage({ message: 'Product updated successfully', type: 'success' })
             //change the status of the products as same as selected products
@@ -184,7 +186,7 @@ class ProductHandler {
     handleSelectedProductDelete = async () => {
         if (window.confirm(`Want to delete ${this.selectedProducts.length} products`)) {
             this.setIsTableLoading(true);
-            const response = await fetchData('productDelete', 'DELETE', this.selectedProducts)
+            const response = await fetchData('productDelete', 'DELETE', this.selectedProducts, { type: this.type, user: this.user.email })
             if (response.status === 'success') {
                 this.setAlertMessage({ message: `${response.data.deletedCount} Products deleted successfully`, type: 'success' })
                 //change the status of the products as same as selected products

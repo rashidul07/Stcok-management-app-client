@@ -6,7 +6,7 @@ import InputFieldsContainer from "../InputFieldsContainer";
 import LocalStorageProduct from "../LocalStorageProduct";
 
 const ProductAddForm = ({ productType }) => {
-    const [productDetails, setProductDetails] = useState(productType === 'stock' ? { quantity: 1, invoiceDiscount: 14.20, extraDiscount: 0 } : { quantity: 1 });
+    const [productDetails, setProductDetails] = useState(productType === 'stock' ? { quantity: 1, quantityHome: 0, invoiceDiscount: 14.20, extraDiscount: 0 } : { quantity: 1 });
     const [localProducts, setLocalProducts] = useState([]);
     const [deletedProduct, setDeletedProduct] = useState([]);
     const [modifiedProductList, setModifiedProductList] = useState([]);
@@ -75,6 +75,7 @@ const ProductAddForm = ({ productType }) => {
             setModifiedProductList
         );
     }, [productDetails, localProducts, deletedProduct, alertMessage, user, productList])
+
 
     return (
         <InputFieldsContainer

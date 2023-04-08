@@ -4,7 +4,7 @@ const AllProducts = () => {
 
     return (
         <DisplayProduct
-            type="shortProducts"
+            type="product"
         />
     )
 }

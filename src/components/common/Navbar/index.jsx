@@ -66,13 +66,13 @@ const Navbar = () => {
                                 <ul className="items-center justify-center font-medium space-y-4 md:flex md:space-x-6 md:space-y-0" onClick={() => setNavbar(false)}>
 
                                     <li className="text-gray-600 hover:text-blue-600">
-                                        <Link to="addProduct" >Add Short Products</Link>
+                                        <Link to="addProduct" >Add Products</Link>
+                                    </li>
+                                    <li className="text-gray-600 hover:text-blue-600">
+                                        <Link to="shortProducts" >Products List</Link>
                                     </li>
                                     <li className="text-gray-600 hover:text-blue-600">
                                         <Link to="addStock">Add Stock Products</Link>
-                                    </li>
-                                    <li className="text-gray-600 hover:text-blue-600">
-                                        <Link to="shortProducts" >Short Products List</Link>
                                     </li>
                                     <li className="text-gray-600 hover:text-blue-600">
                                         <Link to="stockProducts">Stock Products List</Link>

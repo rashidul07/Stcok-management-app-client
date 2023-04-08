@@ -67,7 +67,7 @@ const TableSettings = {
         },
         {
             name: 'Q',
-            selector: row => row.quantity,
+            selector: row => row.quantityHome ? (row.quantity + row.quantityHome + ' (' + row.quantityHome + ')') : row.quantity,
             className: 'table-column quantity',
         },
         {
@@ -76,13 +76,18 @@ const TableSettings = {
             className: 'table-column price',
         },
         {
-            name: 'PA I/D',
-            selector: row => row.invoiceDiscountPrice + '(' + row.invoiceDiscount + ')',
+            name: 'P.A I/D',
+            selector: row => row.invoiceDiscount ? (row.invoiceDiscountPrice + ' (' + row.invoiceDiscount + ')') : row.invoiceDiscountPrice,
             className: 'table-column invoice',
         },
         {
-            name: 'PA A/D',
-            selector: row => row.extraDiscountPrice,
+            name: 'P.A E/D',
+            selector: row => row.extraDiscount ? (row.extraDiscountPrice + ' (' + row.extraDiscount + ')') : row.extraDiscountPrice,
+            className: 'table-column extra',
+        },
+        {
+            name: 'Total',
+            selector: row => row.totalPrice,
             className: 'table-column extra',
         }
     ],

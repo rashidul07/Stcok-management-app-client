@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
   const [productList, setProductList] = useState([])
   const [currentDataType, setCurrentDataType] = useState('')
   const [alertMessage, setAlertMessage] = useState({ message: '', type: '' });
+  const [changeFieldData, setChangeFieldData] = useState([]);
 
   const getProductList = async () => {
     if (user.email && currentDataType !== 'product') {
@@ -20,7 +21,12 @@ export const AuthProvider = ({ children }) => {
       setIsLoading(true)
       const response = await fetchData('productList', 'GET', {}, { type: 'product', user: user.email })
       if (response.status === 'success') {
-        setProductList(response.data)
+        const modifiedData = response.data.map(product => {
+          if (!product.label)
+            return { ...product, label: product.name }
+          return product;
+        })
+        setProductList(modifiedData)
         setCurrentDataType('product')
       }
       if (response.status === 'error') {
@@ -144,7 +150,9 @@ export const AuthProvider = ({ children }) => {
     getStockProductList,
     setIsLoading,
     alertMessage,
-    setAlertMessage
+    setAlertMessage,
+    changeFieldData,
+    setChangeFieldData
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

@@ -19,7 +19,7 @@ class ProductHandler {
         editableRowData,
         setEditableRowData,
         user,
-        type
+        type,
     ) => {
         this.selectedCompany = selectedCompany
         this.setSelectedCompany = setSelectedCompany
@@ -36,8 +36,8 @@ class ProductHandler {
         this.setToggleClearRows = setToggleClearRows
         this.editableRowData = editableRowData
         this.setEditableRowData = setEditableRowData
-        this.user = user,
-            this.type = type
+        this.user = user
+        this.type = type
     }
 
     updateProductsAndProductList = () => {
@@ -45,7 +45,6 @@ class ProductHandler {
     }
 
     handleCompanyChange = () => {
-        console.log(this.selectedCompany);
         if (this.selectedCompany?.value === '') {
             this.setProducts(this.productList)
         }
@@ -62,7 +61,7 @@ class ProductHandler {
         }
         const selectedProductList = this.selectedProducts.map(product => {
             return (
-                `${product.name} -- ${product.quantity}`
+                `${product.label} -- ${product.quantity}`
             )
         })
         this.setTextareaValue(selectedProductList.join('\n'))
@@ -131,7 +130,6 @@ class ProductHandler {
         this.setIsTableLoading(false);
     }
     handleSetCompany = (company) => {
-        console.log(company);
         this.setSelectedCompany(company)
     }
 
@@ -146,11 +144,43 @@ class ProductHandler {
         this.setEditableRowData({ ...data, updated_at: new Date().toISOString(), updated_by: this.user?.email })
     }
 
+    updateChangeableFieldData = () => {
+        if (this.editableRowData._id) {
+            const product = this.productList.find(p => p._id === this.editableRowData._id);
+            const changeFieldData = {
+                productId: this.editableRowData._id,
+                label: this.editableRowData.label.trim(),
+                date: new Date().toISOString(),
+                user: this.user.email,
+                operation: 'update',
+                rId: this.editableRowData.rId,
+                productData: {}
+            };
+            for (const key in product) {
+                if (product[key] !== this.editableRowData[key]) {
+
+                    //need to ignore some property like name, updated_at and updated_by
+                    if (key === 'name' || key === 'updated_at' || key === 'updated_by' ||
+                        key === 'extraDiscountPrice' || key === 'invoiceDiscountPrice' || key === 'totalPrice'
+                    ) {
+                        continue;
+                    }
+                    if (key === 'company' && product[key] === this.editableRowData[key].value) {
+                        continue;
+                    }
+                    changeFieldData['productData'][key] = [product[key], this.editableRowData[key]];
+                }
+            }
+            return changeFieldData;
+        }
+    }
+
     handleProductEdit = async () => {
-        if (!this.editableRowData.name || !this.editableRowData.quantity || !this.editableRowData.status) {
+        if (!this.editableRowData.label || !this.editableRowData.quantity || !this.editableRowData.status) {
             alert('Please fill all the fields')
             return
         }
+        const changeFieldData = this.updateChangeableFieldData();
         this.setIsTableLoading(true);
         const response = await fetchData('addProduct', 'POST', { productsCollection: [this.editableRowData] }, { type: this.type, user: this.user.email })
         if (response.status === 'success') {
@@ -174,6 +204,11 @@ class ProductHandler {
             const companyDetails = storeData.companyList.find(company => company.value === this.editableRowData.company)
             this.setSelectedCompany(companyDetails)
             this.setEditableRowData({})
+            if (this.type === 'product') {
+                fetchData('addHistory', 'POST', [changeFieldData])
+            } else if (this.type === 'stock') {
+                fetchData('addStockHistory', 'POST', [changeFieldData])
+            }
             const modal = document.getElementById("my-modal");
             modal.click();
         }

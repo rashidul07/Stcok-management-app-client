@@ -1,15 +1,19 @@
 
-// const API = {
-//     productList: 'https://rmcserver.cyclic.app/getProducts',
-//     addProduct: 'https://rmcserver.cyclic.app/addProducts',
-//     productDelete: 'https://rmcserver.cyclic.app/deleteProducts',
-// }
-
 const API = {
-    productList: 'http://localhost:5000/getProducts',
-    addProduct: 'http://localhost:5000/addProducts',
-    productDelete: 'http://localhost:5000/deleteProducts',
+    productList: 'https://rmcserver.cyclic.app/getProducts',
+    addProduct: 'https://rmcserver.cyclic.app/addProducts',
+    productDelete: 'https://rmcserver.cyclic.app/deleteProducts',
+    addHistory: 'https://rmcserver.cyclic.app/addHistory',
+    addStockHistory: 'https://rmcserver.cyclic.app/addStockHistory',
 }
+
+// const API = {
+//     productList: 'http://localhost:5000/getProducts',
+//     addProduct: 'http://localhost:5000/addProducts',
+//     productDelete: 'http://localhost:5000/deleteProducts',
+//     addHistory: 'http://localhost:5000/addHistory',
+//     addStockHistory: 'http://localhost:5000/addStockHistory',
+// }
 
 
 export default async function fetchData(url, method, body = {}, params = {}) {

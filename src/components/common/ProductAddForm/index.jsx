@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import UseContext from "../../contexts/UseContext";
 import { deletePermanently, handleProductSubmit, margeArray, updateTheConstructor } from "../../Helper/AddProductHandler";
 import { storeData } from "../../Helper/storeData";
+import UseContext from "../../contexts/UseContext";
 import InputFieldsContainer from "../InputFieldsContainer";
 import LocalStorageProduct from "../LocalStorageProduct";
 
@@ -10,7 +10,7 @@ const ProductAddForm = ({ productType }) => {
     const [localProducts, setLocalProducts] = useState([]);
     const [deletedProduct, setDeletedProduct] = useState([]);
     const [modifiedProductList, setModifiedProductList] = useState([]);
-    const { productList, user, setProductList, getStockProductList, getProductList, alertMessage, setAlertMessage } = UseContext()
+    const { productList, user, setProductList, getStockProductList, getProductList, alertMessage, setAlertMessage, changeFieldData, setChangeFieldData } = UseContext();
     const [isLoading, setIsLoading] = useState(false);
     const productLength = productList.length
 
@@ -44,16 +44,7 @@ const ProductAddForm = ({ productType }) => {
 
     //set modified product list for the autocomplete initially
     useEffect(() => {
-        //previous data doesn't have label property so we have to add it
-        const modifiedData = productList.map(product => {
-            return (
-                {
-                    ...product,
-                    label: product.name
-                }
-            )
-        })
-        setModifiedProductList(margeArray(localProducts, modifiedData));
+        setModifiedProductList(margeArray(localProducts, productList));
     }, [productList]);
 
     // to update the constructor dependency array 
@@ -72,10 +63,11 @@ const ProductAddForm = ({ productType }) => {
             setProductList,
             productType,
             modifiedProductList,
-            setModifiedProductList
+            setModifiedProductList,
+            changeFieldData,
+            setChangeFieldData
         );
     }, [productDetails, localProducts, deletedProduct, alertMessage, user, productList])
-
 
     return (
         <InputFieldsContainer

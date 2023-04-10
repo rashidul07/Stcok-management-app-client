@@ -29,7 +29,7 @@ const EditableField = ({ product, localProducts, setLocalProducts, storageName }
                 type="text"
                 value={product.label}
                 onChange={(e) => {
-                    const updatedProduct = { ...product, label: e.target.value, name: e.target.value };
+                    const updatedProduct = { ...product, label: e.target.value };
                     const updatedProducts = localProducts.map(p => p.rId === product.rId ? updatedProduct : p);
                     localStorage.setItem(storageName, JSON.stringify(updatedProducts));
                     setLocalProducts(updatedProducts);
@@ -53,7 +53,7 @@ const EditableField = ({ product, localProducts, setLocalProducts, storageName }
                     <>
                         <input
                             type="number"
-                            value={product.price}
+                            value={product.price || ""}
                             onChange={(e) => {
                                 const modifiedProduct = { ...product, price: Number(e.target.value) };
                                 const updatedProduct = updateProductPrice(modifiedProduct)
@@ -65,7 +65,7 @@ const EditableField = ({ product, localProducts, setLocalProducts, storageName }
                         />
                         <input
                             type="number"
-                            value={product.invoiceDiscount}
+                            value={product.invoiceDiscount || ""}
                             onChange={(e) => {
                                 const modifiedProduct = { ...product, invoiceDiscount: Number(e.target.value) };
                                 const updatedProduct = updateProductPrice(modifiedProduct)
@@ -77,7 +77,7 @@ const EditableField = ({ product, localProducts, setLocalProducts, storageName }
                         />
                         <input
                             type="number"
-                            value={product.extraDiscount}
+                            value={product.extraDiscount || ""}
                             onChange={(e) => {
                                 const modifiedProduct = { ...product, extraDiscount: Number(e.target.value) };
                                 const updatedProduct = updateProductPrice(modifiedProduct)
@@ -92,7 +92,7 @@ const EditableField = ({ product, localProducts, setLocalProducts, storageName }
             }
             <input
                 type="number"
-                value={product.quantity}
+                value={product.quantity || ''}
                 onChange={(e) => {
                     const modifiedProduct = { ...product, quantity: Number(e.target.value) };
                     const updatedProduct = updateProductPrice(modifiedProduct)

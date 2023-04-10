@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import Select from 'react-select';
-import UseContext from "../../contexts/UseContext";
 import { handleCompanyChange, handleCopy, handleRowClicked, handleSelectedProductDelete, handleSelection, handleSetCompany, handleTextarea, handleUpdate, prepareTextareaValue, updateAllProductConstructor } from '../../Helper/AllProductsHandler';
 import { storeData } from '../../Helper/storeData';
 import Alert from '../../Libs/Alert';
 import { Indicator } from "../../Libs/Indicator";
 import ProductEditModal from '../../Libs/ProductEditModal';
 import Spinner from "../../Libs/Spinner";
+import UseContext from "../../contexts/UseContext";
 import TableSettings from '../../pages/AllProducts/TableSettings';
 
 const DisplayProduct = ({ type }) => {
@@ -40,7 +40,7 @@ const DisplayProduct = ({ type }) => {
             editableRowData,
             setEditableRowData,
             user,
-            type
+            type,
         )
     }, [selectedCompany, products, TextareaValue, productList, selectedProducts, editableRowData])
 

@@ -28,9 +28,9 @@ export default function ModalField({ product }) {
             <div className="flex items-center">
                 <input
                     type="text"
-                    value={product.name || ""}
+                    value={product.label || ""}
                     onChange={(e) => {
-                        const updatedProduct = { ...product, label: e.target.value, name: e.target.value };
+                        const updatedProduct = { ...product, label: e.target.value };
                         handleSetEditableRowData(updatedProduct);
                     }}
                     className="text-lg text-black bg-white px-2 rounded-md border-gray-600 border-0 w-3/6 mx-1 h-8"
@@ -42,7 +42,7 @@ export default function ModalField({ product }) {
                         const updatedProduct = { ...product, company: company.value };
                         handleSetEditableRowData(updatedProduct);
                     }}
-                    options={!product.totalPrice === undefined ? storeData.companyList.slice(1) : storeData.stockCompanyList.slice(1)}
+                    options={product.totalPrice === undefined ? storeData.companyList.slice(1) : storeData.stockCompanyList.slice(1)}
                     className="bg-white rounded-md border-gray-600 border-0 w-1/4 mx-1 h-8 min-h-8"
                 />
                 {

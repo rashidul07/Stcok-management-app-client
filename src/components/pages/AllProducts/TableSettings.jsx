@@ -1,6 +1,6 @@
 const caseInsensitiveSort = (rowA, rowB) => {
-    const a = rowA.name.toLowerCase();
-    const b = rowB.name.toLowerCase();
+    const a = rowA.label.toLowerCase();
+    const b = rowB.label.toLowerCase();
 
     if (a > b) {
         return 1;
@@ -36,7 +36,7 @@ const TableSettings = {
     shortProductColumns: [
         {
             name: 'Name',
-            selector: row => row.name,
+            selector: row => row.label,
             sortable: true,
             sortFunction: caseInsensitiveSort,
             className: 'table-column name',
@@ -55,7 +55,7 @@ const TableSettings = {
     stockProductColumns: [
         {
             name: 'Name',
-            selector: row => row.name,
+            selector: row => row.label,
             sortable: true,
             sortFunction: caseInsensitiveSort,
             className: 'table-column name',

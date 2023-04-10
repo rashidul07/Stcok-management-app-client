@@ -16,7 +16,9 @@ class AddProductHandler {
         setProductList,
         type,
         modifiedProductList,
-        setModifiedProductList
+        setModifiedProductList,
+        changeFieldData,
+        setChangeFieldData
     ) => {
 
         this.productDetails = productDetails;
@@ -33,6 +35,8 @@ class AddProductHandler {
         this.type = type;
         this.modifiedProductList = modifiedProductList;
         this.setModifiedProductList = setModifiedProductList;
+        this.changeFieldData = changeFieldData;
+        this.setChangeFieldData = setChangeFieldData;
     }
 
     /*if any product is available both local and modified product list then remove 
@@ -65,7 +69,49 @@ class AddProductHandler {
         return newProductDetails;
     }
 
+    updateChangeableFieldData = () => {
+        if (this.productDetails._id) {
+            const product = this.productList.find(p => p._id === this.productDetails._id);
+            const changeFieldData = {
+                productId: this.productDetails._id,
+                label: this.productDetails.label.trim(),
+                date: new Date().toISOString(),
+                user: this.user.email,
+                operation: 'update',
+                rId: this.productDetails.rId,
+                productData: {}
+            };
+            for (const key in product) {
+                if (product[key] !== this.productDetails[key]) {
+
+                    //need to ignore some property like name, updated_at and updated_by
+                    if (key === 'name' || key === 'updated_at' || key === 'updated_by' ||
+                        key === 'extraDiscountPrice' || key === 'invoiceDiscountPrice' || key === 'totalPrice'
+                    ) {
+                        continue;
+                    }
+                    if (key === 'company' && product[key] === this.productDetails[key].value) {
+                        continue;
+                    }
+                    if (key === 'company') {
+                        changeFieldData['productData'][key] = [product[key], this.productDetails[key].value];
+                        continue;
+                    }
+                    changeFieldData['productData'][key] = [product[key], this.productDetails[key]];
+                }
+            }
+            //if this.changeFieldData already contain the changeFieldData then remove the old one and add the new one
+            const changeFieldDataIndex = this.changeFieldData.findIndex(c => c.productId === this.productDetails._id);
+            if (changeFieldDataIndex !== -1) {
+                this.changeFieldData.splice(changeFieldDataIndex, 1);
+            }
+            this.setChangeFieldData([...this.changeFieldData, changeFieldData]);
+        }
+    }
+
     updateProductDataForServer = (type) => {
+        // find out the which property is changed and update the changeFieldData
+        this.updateChangeableFieldData();
         let productList;
         if (type === 'databaseProduct') {
             productList =
@@ -73,7 +119,6 @@ class AddProductHandler {
                 {
                     ...this.productDetails,
                     label: this.productDetails.label.trim(),
-                    name: this.productDetails.label.trim(),
                     company: this.productDetails.company.value,
                     updated_at: new Date().toISOString(),
                     updated_by: this.user.email,
@@ -85,7 +130,6 @@ class AddProductHandler {
             productList[updatedProductIndex] = {
                 ...this.productDetails,
                 label: this.productDetails.label.trim(),
-                name: this.productDetails.label.trim(),
                 company: this.productDetails.company.value,
                 updated_at: new Date().toISOString(),
                 updated_by: this.user.email,
@@ -97,7 +141,6 @@ class AddProductHandler {
                 {
                     rId: id, ...this.productDetails,
                     label: this.productDetails.label.trim(),
-                    name: this.productDetails.label.trim(),
                     company: this.productDetails.company.value,
                     time: new Date().toISOString(),
                     updated_at: new Date().toISOString(),
@@ -151,7 +194,6 @@ class AddProductHandler {
         } else {
             productList = this.updateProductDataForServer('newProduct');
         }
-        console.log(productList);
         this.setLocalProducts(productList);
 
         if (this.type === 'stock') {
@@ -181,6 +223,11 @@ class AddProductHandler {
         if (confirmBox === true) {
             const updatedProducts = this.localProducts.filter(p => p.rId !== id);
             this.setLocalProducts(updatedProducts);
+            //if change field data contain the deleted product then remove it
+            const changeFieldDataIndex = this.changeFieldData.findIndex(c => c.rId === id);
+            if (changeFieldDataIndex !== -1) {
+                this.changeFieldData.splice(changeFieldDataIndex, 1);
+            }
             //also remove from modified product list
             const updatedModifiedProduct = this.modifiedProductList.filter(p => p.rId !== id);
             this.setModifiedProductList(updatedModifiedProduct);
@@ -217,6 +264,14 @@ class AddProductHandler {
                 this.setAlertMessage({ message: `New ${response.data?.insertedCount || 0} & Updated ${response.data?.modifiedCount || 0} added.`, type: 'success' });
                 localStorage.removeItem(this.type === "product" ? 'productList' : 'stockList');
                 this.setLocalProducts([]);
+                if (this.changeFieldData.length > 0) {
+                    if (this.type === 'product') {
+                        fetchData('addHistory', 'POST', this.changeFieldData)
+                    } else {
+                        fetchData('addStockHistory', 'POST', this.changeFieldData)
+                    }
+                    this.setChangeFieldData([]);
+                }
             }
             else {
                 this.setAlertMessage({ message: response.message, type: 'error' });

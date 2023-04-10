@@ -1,10 +1,10 @@
 
 const API = {
-    productList: 'https://rmcserver.cyclic.app/getProducts',
-    addProduct: 'https://rmcserver.cyclic.app/addProducts',
-    productDelete: 'https://rmcserver.cyclic.app/deleteProducts',
-    addHistory: 'https://rmcserver.cyclic.app/addHistory',
-    addStockHistory: 'https://rmcserver.cyclic.app/addStockHistory',
+    productList: `${import.meta.env.VITE_SERVER_URL}/getProducts`,
+    addProduct: `${import.meta.env.VITE_SERVER_URL}/addProducts`,
+    productDelete: `${import.meta.env.VITE_SERVER_URL}/deleteProducts`,
+    addHistory: `${import.meta.env.VITE_SERVER_URL}/addHistory`,
+    addStockHistory: `${import.meta.env.VITE_SERVER_URL}/addStockHistory`,
 }
 
 // const API = {

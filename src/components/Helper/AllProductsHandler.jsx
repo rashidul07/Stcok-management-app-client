@@ -51,6 +51,7 @@ class ProductHandler {
 
         if (this.selectedCompany && this.selectedCompany?.value !== '') {
             const filteredProducts = this.productList.filter(product => product.company === this.selectedCompany.value)
+            console.log(filteredProducts);
             this.setProducts(filteredProducts)
         }
     }

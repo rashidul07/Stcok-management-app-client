@@ -61,6 +61,7 @@ const DisplayProduct = ({ type }) => {
             }
             setFooter(footer)
         }
+        console.log('products', products);
     }, [products])
 
     useEffect(() => { handleCompanyChange() }, [selectedCompany])
@@ -113,7 +114,7 @@ const DisplayProduct = ({ type }) => {
                     <DataTable
                         columns={type === 'product' ? TableSettings.shortProductColumns : TableSettings.stockProductColumns}
                         data={(products.length && type === 'stock') ? [...products, footer] : products}
-                        keyField="rId"
+                        keyField="_id"
                         expandableRows
                         expandableRowsComponent={TableSettings.ExpandedComponent}
                         className={type === 'product' ? 'shortListTable' : 'stockListTable'}
@@ -123,8 +124,6 @@ const DisplayProduct = ({ type }) => {
                         clearSelectedRows={toggledClearRows}
                         conditionalRowStyles={TableSettings.conditionalRowStyles}
                         onRowClicked={handleRowClicked}
-                        noHeader
-                        footer={footer}
                     />
                     {alertMessage.type === 'error' && <Alert message={alertMessage.message} className="bg-red-500" />}
                     {alertMessage.type === 'success' && <Alert message={alertMessage.message} className="bg-green-600" />}

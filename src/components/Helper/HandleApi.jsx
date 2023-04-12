@@ -7,6 +7,7 @@ const API = {
     addStockHistory: `${import.meta.env.VITE_SERVER_URL}/addStockHistory`,
 }
 
+
 // const API = {
 //     productList: 'http://localhost:5000/getProducts',
 //     addProduct: 'http://localhost:5000/addProducts',

@@ -87,21 +87,36 @@ const EditableField = ({ product, localProducts, setLocalProducts, storageName }
                             }}
                             className="bg-white text-sm rounded-md border-gray-600 border-0 w-6 pl-1 mx-1"
                         />
+                        <input
+                            type="number"
+                            value={product.quantity || ''}
+                            onChange={(e) => {
+                                const modifiedProduct = { ...product, quantity: Number(e.target.value) };
+                                const updatedProduct = updateProductPrice(modifiedProduct)
+                                const updatedProducts = localProducts.map(p => p.rId === product.rId ? updatedProduct : p);
+                                localStorage.setItem(storageName, JSON.stringify(updatedProducts));
+                                setLocalProducts(updatedProducts);
+                            }}
+                            className={`bg-white text-sm px-2 rounded-md border-gray-600 border-0 text-center ${product.price ? 'w-6' : 'w-10'}`}
+                        />
                     </>
                 )
             }
-            <input
-                type="number"
-                value={product.quantity || ''}
-                onChange={(e) => {
-                    const modifiedProduct = { ...product, quantity: Number(e.target.value) };
-                    const updatedProduct = updateProductPrice(modifiedProduct)
-                    const updatedProducts = localProducts.map(p => p.rId === product.rId ? updatedProduct : p);
-                    localStorage.setItem(storageName, JSON.stringify(updatedProducts));
-                    setLocalProducts(updatedProducts);
-                }}
-                className={`bg-white text-sm px-2 rounded-md border-gray-600 border-0 text-center ${product.price ? 'w-6' : 'w-10'}`}
-            />
+            {
+                !product.price && (
+                    <input
+                        type="number"
+                        value={product.quantity || ''}
+                        onChange={(e) => {
+                            const updatedProduct = { ...product, quantity: e.target.value };
+                            const updatedProducts = localProducts.map(p => p.rId === product.rId ? updatedProduct : p);
+                            localStorage.setItem(storageName, JSON.stringify(updatedProducts));
+                            setLocalProducts(updatedProducts);
+                        }}
+                        className={`bg-white text-sm px-2 rounded-md border-gray-600 border-0 text-center ${product.price ? 'w-6' : 'w-10'}`}
+                    />
+                )
+            }
         </>
     )
 }

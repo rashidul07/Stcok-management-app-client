@@ -8,9 +8,11 @@ import AddProductPage from "./components/pages/AddProduct";
 import AddStock from "./components/pages/AddStock";
 import AddUser from "./components/pages/AddUser";
 import AllProducts from "./components/pages/AllProducts";
+import Dashboard from "./components/pages/Dashboard";
 import ErrorPage from './components/pages/Error';
 import Home from './components/pages/Home';
 import Login from './components/pages/Login';
+import ModifyProduct from "./components/pages/ModifyProduct";
 import StockProducts from "./components/pages/StockProducts";
 
 const HeaderLayout = () => (
@@ -56,6 +58,14 @@ const router = createBrowserRouter([
       {
         path: '/addUser',
         element: <AddUser />,
+      },
+      {
+        path: '/dashboard',
+        element: <Dashboard />,
+      },
+      {
+        path: '/modifyProduct',
+        element: <ModifyProduct />,
       },
       {
         path: '*',

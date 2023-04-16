@@ -5,17 +5,11 @@ const API = {
     productDelete: `${import.meta.env.VITE_SERVER_URL}/deleteProducts`,
     addHistory: `${import.meta.env.VITE_SERVER_URL}/addHistory`,
     addStockHistory: `${import.meta.env.VITE_SERVER_URL}/addStockHistory`,
+    getHistory: `${import.meta.env.VITE_SERVER_URL}/getHistory`,
+    getStockHistory: `${import.meta.env.VITE_SERVER_URL}/getStockHistory`,
+    getProductsLength: `${import.meta.env.VITE_SERVER_URL}/getProductsLength`,
+    modifyProduct: `${import.meta.env.VITE_SERVER_URL}/modifyProducts`,
 }
-
-
-// const API = {
-//     productList: 'http://localhost:5000/getProducts',
-//     addProduct: 'http://localhost:5000/addProducts',
-//     productDelete: 'http://localhost:5000/deleteProducts',
-//     addHistory: 'http://localhost:5000/addHistory',
-//     addStockHistory: 'http://localhost:5000/addStockHistory',
-// }
-
 
 export default async function fetchData(url, method, body = {}, params = {}) {
     method = method?.toUpperCase() || 'GET';

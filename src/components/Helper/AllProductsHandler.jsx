@@ -51,7 +51,6 @@ class ProductHandler {
 
         if (this.selectedCompany && this.selectedCompany?.value !== '') {
             const filteredProducts = this.productList.filter(product => product.company === this.selectedCompany.value)
-            console.log(filteredProducts);
             this.setProducts(filteredProducts)
         }
     }
@@ -224,6 +223,24 @@ class ProductHandler {
             this.setIsTableLoading(true);
             const response = await fetchData('productDelete', 'DELETE', this.selectedProducts, { type: this.type, user: this.user.email })
             if (response.status === 'success') {
+                // add history for deleted products
+                const historyData = this.selectedProducts.map(pd => {
+                    return {
+                        productId: pd._id,
+                        label: pd.label,
+                        date: new Date().toISOString(),
+                        user: this.user.email,
+                        operation: 'delete',
+                        rId: pd.rId,
+                        productData: pd
+                    }
+                })
+                if (this.type === 'product') {
+                    fetchData('addHistory', 'POST', historyData)
+                } else if (this.type === 'stock') {
+                    fetchData('addStockHistory', 'POST', historyData)
+                }
+
                 this.setAlertMessage({ message: `${response.data.deletedCount} Products deleted successfully`, type: 'success' })
                 //change the status of the products as same as selected products
                 const updatedProducts = this.products.filter(product => {

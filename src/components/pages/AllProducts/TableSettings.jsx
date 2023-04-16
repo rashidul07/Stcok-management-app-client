@@ -1,6 +1,6 @@
 const caseInsensitiveSort = (rowA, rowB) => {
-    const a = rowA.label.toLowerCase();
-    const b = rowB.label.toLowerCase();
+    const a = rowA?.label?.toLowerCase();
+    const b = rowB?.label?.toLowerCase();
 
     if (a > b) {
         return 1;
@@ -90,6 +90,21 @@ const TableSettings = {
             selector: row => row.totalPrice,
             className: 'table-column extra',
         }
+    ],
+    dashBoardShortProduct: [
+        {
+            name: 'Name',
+            selector: row => row.label,
+            sortable: true,
+            sortFunction: caseInsensitiveSort,
+            className: 'table-column name',
+        },
+        {
+            name: 'Operation',
+            selector: row => row.operation,
+            className: 'table-column operation',
+        },
+
     ],
     conditionalRowStyles: [
         {

@@ -17,7 +17,12 @@ export default function UseContext() {
         alertMessage,
         setAlertMessage,
         changeFieldData,
-        setChangeFieldData
+        setChangeFieldData,
+        productHistory,
+        stockProductHistory,
+        getAllHistory,
+        getProductsLength,
+        productLength
     } = useContext(AuthContext);
 
     return {
@@ -36,6 +41,11 @@ export default function UseContext() {
         alertMessage,
         setAlertMessage,
         changeFieldData,
-        setChangeFieldData
+        setChangeFieldData,
+        productHistory,
+        stockProductHistory,
+        getAllHistory,
+        getProductsLength,
+        productLength
     }
 }

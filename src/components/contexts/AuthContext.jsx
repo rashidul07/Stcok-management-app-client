@@ -14,6 +14,9 @@ export const AuthProvider = ({ children }) => {
   const [currentDataType, setCurrentDataType] = useState('')
   const [alertMessage, setAlertMessage] = useState({ message: '', type: '' });
   const [changeFieldData, setChangeFieldData] = useState([]);
+  const [productHistory, setProductHistory] = useState([]);
+  const [stockProductHistory, setStockProductHistory] = useState([]);
+  const [productLength, setProductLength] = useState({});
 
   const getProductList = async () => {
     if (user.email && currentDataType !== 'product') {
@@ -49,6 +52,40 @@ export const AuthProvider = ({ children }) => {
         setError(response);
       }
       setIsLoading(false)
+    }
+  }
+
+  const getAllHistory = async () => {
+    //call both getHistory and getStockHistory api and set the data
+    if (user.email) {
+      setIsLoading(true)
+      const response = await fetchData('getHistory', 'GET', {}, { user: user.email })
+      if (response.status === 'success') {
+        setProductHistory(response.data)
+      }
+      if (response.status === 'error') {
+        setError(response);
+      }
+      const stockResponse = await fetchData('getStockHistory', 'GET', {}, { user: user.email })
+      if (stockResponse.status === 'success') {
+        setStockProductHistory(stockResponse.data)
+      }
+      if (stockResponse.status === 'error') {
+        setError(stockResponse);
+      }
+      setIsLoading(false)
+    }
+  }
+
+  const getProductsLength = async () => {
+    if (user.email) {
+      const response = await fetchData('getProductsLength', 'GET', {}, { user: user.email })
+      if (response.status === 'success') {
+        setProductLength(response.data)
+      }
+      if (response.status === 'error') {
+        setError(response);
+      }
     }
   }
 
@@ -152,7 +189,12 @@ export const AuthProvider = ({ children }) => {
     alertMessage,
     setAlertMessage,
     changeFieldData,
-    setChangeFieldData
+    setChangeFieldData,
+    productHistory,
+    stockProductHistory,
+    getAllHistory,
+    getProductsLength,
+    productLength
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

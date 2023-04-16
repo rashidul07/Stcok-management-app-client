@@ -51,7 +51,7 @@ const DisplayProduct = ({ type }) => {
     useEffect(() => {
         if (type === 'stock' && products.length > 0) {
             const footer = {
-                name: 'Total',
+                label: 'Total',
                 quantity: products.reduce((acc, item) => acc + (item.quantity + (item.quantityHome || 0)), 0),
                 company: '-',
                 price: Math.round(products.reduce((acc, item) => acc + item.price, 0)),

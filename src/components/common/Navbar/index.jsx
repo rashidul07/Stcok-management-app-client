@@ -78,7 +78,10 @@ const Navbar = () => {
                                         <Link to="stockProducts">Stock Products List</Link>
                                     </li>
                                     <li className="text-gray-600 hover:text-blue-600">
-                                        <a href="#">Dashboard</a>
+                                        <Link to="modifyProduct">Modify Product</Link>
+                                    </li>
+                                    <li className="text-gray-600 hover:text-blue-600">
+                                        <Link to="dashboard">Dashboard</Link>
                                     </li>
                                     {
                                         user?.email === 'rashed@rmc.com' && (

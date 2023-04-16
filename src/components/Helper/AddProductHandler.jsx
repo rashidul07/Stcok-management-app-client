@@ -260,10 +260,32 @@ class AddProductHandler {
         if (confirmBox === true) {
             const response = await fetchData('addProduct', 'POST', { productsCollection: this.localProducts }, { type: this.type, user: this.user.email })
             if (response.status === 'success') {
+                // from localProducts remove all the products which are already in database with _id
+                const newProducts = this.localProducts.map(pd => {
+                    if (!pd._id) {
+                        return {
+                            productId: null,
+                            label: pd.label,
+                            date: new Date().toISOString(),
+                            user: this.user.email,
+                            operation: 'insert',
+                            rId: pd.rId,
+                            productData: pd
+                        }
+                    }
+                });
+                // save history for new products
+                if (this.type === 'product') {
+                    fetchData('addHistory', 'POST', newProducts)
+                } else {
+                    fetchData('addStockHistory', 'POST', newProducts)
+                }
+                //save history for new products
                 this.setProductList(this.margeArray(this.localProducts, this.productList));
                 this.setAlertMessage({ message: `New ${response.data?.insertedCount || 0} & Updated ${response.data?.modifiedCount || 0} added.`, type: 'success' });
                 localStorage.removeItem(this.type === "product" ? 'productList' : 'stockList');
                 this.setLocalProducts([]);
+                // save history for already existing products
                 if (this.changeFieldData.length > 0) {
                     if (this.type === 'product') {
                         fetchData('addHistory', 'POST', this.changeFieldData)

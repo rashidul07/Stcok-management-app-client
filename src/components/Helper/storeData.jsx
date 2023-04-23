@@ -48,7 +48,8 @@ export const storeData = {
         { value: 'reneta', label: 'Reneta' },
         { value: 'square', label: 'Square' },
         { value: 'unihealth', label: 'Uni Health' },
-        { value: 'others', label: 'All Others' }
+        { value: 'others', label: 'All Others' },
+        { value: 'rashu', label: 'Rashu`s Product' },
     ],
     productType: [
         { value: '', label: 'Please select a Type' },

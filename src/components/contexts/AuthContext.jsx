@@ -8,7 +8,6 @@ firebaseInit();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState({})
   const [error, setError] = useState('')
-  const auth = getAuth();
   const [isLoading, setIsLoading] = useState(false)
   const [productList, setProductList] = useState([])
   const [currentDataType, setCurrentDataType] = useState('')
@@ -17,6 +16,7 @@ export const AuthProvider = ({ children }) => {
   const [productHistory, setProductHistory] = useState([]);
   const [stockProductHistory, setStockProductHistory] = useState([]);
   const [productLength, setProductLength] = useState({});
+  const auth = getAuth();
 
   const getProductList = async () => {
     if (user.email && currentDataType !== 'product') {

@@ -51,6 +51,7 @@ const RemoveForm = ({ localProducts, setLocalProducts, productType, setProductTy
             const modifiedData = productList.map(product => {
                 //check if product is already in localProducts
                 const isAlreadyAdded = localProducts.find(pd => pd._id === product._id);
+                console.log('isAlreadyAdded', isAlreadyAdded, product);
                 if (!isAlreadyAdded) {
                     if (!product.label) {
                         return {
@@ -63,6 +64,7 @@ const RemoveForm = ({ localProducts, setLocalProducts, productType, setProductTy
                             ...product,
                             id: id++,
                             label: product.label + ' (' + product.quantity + ')',
+                            name: product.label
                         }
                     }
                 }
@@ -72,7 +74,7 @@ const RemoveForm = ({ localProducts, setLocalProducts, productType, setProductTy
             setProductDetails({ quantity: 1 })
         }
     }, [productList, productType?.value, localProducts])
-
+    console.log('localProducts', modifiedProductList);
 
     const handleOnSearch = (string, results) => {
         if (!productType || !productType.value) {
@@ -83,32 +85,18 @@ const RemoveForm = ({ localProducts, setLocalProducts, productType, setProductTy
 
     const handleOnSelect = (value) => {
         if (productType.value === 'product') {
-            if (!value.label) {
-                setProductDetails({
-                    _id: value._id,
-                    label: value.name,
-                    oldQuantity: value.quantity,
-                    quantity: 1,
-                    rId: value.rId
-                });
-            } else {
-                setProductDetails({
-                    _id: value._id,
-                    label: value.label,
-                    oldQuantity: value.quantity,
-                    quantity: 1,
-                    rId: value.rId
-                });
-            }
-
-        } else {
             setProductDetails({
                 _id: value._id,
-                label: value.label,
+                label: value.label ? value.label : value.name,
                 oldQuantity: value.quantity,
                 quantity: 1,
-                rId: value.rId,
-                price: value.extraDiscountPrice
+                rId: value.rId
+            });
+        } else {
+            setProductDetails({
+                ...value,
+                oldQuantity: value.quantity,
+                quantity: 1,
             });
         }
 
@@ -117,23 +105,10 @@ const RemoveForm = ({ localProducts, setLocalProducts, productType, setProductTy
     const formatResult = (item) => {
         return (
             <>
-                <span style={{ display: 'block', textAlign: 'left' }}>{item.label}</span>
+                <span style={{ display: 'block', textAlign: 'left' }}>{item.label ? item.label : item.name}</span>
             </>
         )
     }
-
-    // useEffect(() => {
-    //     //remove local products from modifiedProductList
-    //     if (localProducts) {
-    //         const modifiedData = productList.filter(product => {
-    //             const found = localProducts.find(localProduct => localProduct._id === product._id);
-    //             return !found;
-    //         })
-    //         setModifiedProductList(modifiedData);
-    //         console.log(productList.length);
-    //         console.log(localProducts);
-    //     }
-    // }, [localProducts])
 
     return (
         <form className="space-y-4 md:w-96">
@@ -169,7 +144,6 @@ const RemoveForm = ({ localProducts, setLocalProducts, productType, setProductTy
                                         formatResult={formatResult}
                                         showIcon={false}
                                         styling={{ borderRadius: '4px', border: '2px solid black' }}
-
                                     />
                                 </div>
                             </div>

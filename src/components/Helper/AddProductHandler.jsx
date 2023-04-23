@@ -261,24 +261,23 @@ class AddProductHandler {
             const response = await fetchData('addProduct', 'POST', { productsCollection: this.localProducts }, { type: this.type, user: this.user.email })
             if (response.status === 'success') {
                 // from localProducts remove all the products which are already in database with _id
-                const newProducts = this.localProducts.map(pd => {
-                    if (!pd._id) {
-                        return {
-                            productId: null,
-                            label: pd.label,
-                            date: new Date().toISOString(),
-                            user: this.user.email,
-                            operation: 'insert',
-                            rId: pd.rId,
-                            productData: pd
-                        }
+                const newProducts = this.localProducts.filter(p => !p._id);
+                const modifiedNewProduct = newProducts.map(pd => {
+                    return {
+                        productId: null,
+                        label: pd.label,
+                        date: new Date().toISOString(),
+                        user: this.user.email,
+                        operation: 'insert',
+                        rId: pd.rId,
+                        productData: pd
                     }
-                });
+                })
                 // save history for new products
-                if (this.type === 'product') {
-                    fetchData('addHistory', 'POST', newProducts)
-                } else {
-                    fetchData('addStockHistory', 'POST', newProducts)
+                if (this.type === 'product' && modifiedNewProduct.length > 0) {
+                    fetchData('addHistory', 'POST', modifiedNewProduct)
+                } else if (this.type === 'stock' && modifiedNewProduct.length > 0) {
+                    fetchData('addStockHistory', 'POST', modifiedNewProduct)
                 }
                 //save history for new products
                 this.setProductList(this.margeArray(this.localProducts, this.productList));
@@ -286,6 +285,7 @@ class AddProductHandler {
                 localStorage.removeItem(this.type === "product" ? 'productList' : 'stockList');
                 this.setLocalProducts([]);
                 // save history for already existing products
+
                 if (this.changeFieldData.length > 0) {
                     if (this.type === 'product') {
                         fetchData('addHistory', 'POST', this.changeFieldData)

@@ -50,18 +50,30 @@ const DisplayProduct = ({ type }) => {
 
     useEffect(() => {
         if (type === 'stock' && products.length > 0) {
-            const footer = {
-                label: 'Total',
-                quantity: products.reduce((acc, item) => acc + (item.quantity + (item.quantityHome || 0)), 0),
-                company: '-',
-                price: Math.round(products.reduce((acc, item) => acc + item.price, 0)),
-                invoiceDiscountPrice: Math.round(products.reduce((acc, item) => acc + item.invoiceDiscountPrice, 0)),
-                extraDiscountPrice: Math.round(products.reduce((acc, item) => acc + item.extraDiscountPrice, 0)),
-                totalPrice: Math.round(products.reduce((acc, item) => acc + item.totalPrice, 0)),
+            if (selectedCompany === null || selectedCompany === '') {
+                const footer = {
+                    label: 'Total',
+                    quantity: products.reduce((acc, item) => acc + (item.company !== 'rashu' ? item.quantity + (item.quantityHome || 0) : 0), 0),
+                    company: '-',
+                    price: Math.round(products.reduce((acc, item) => acc + (item.company !== 'rashu' ? item.price : 0), 0)),
+                    invoiceDiscountPrice: Math.round(products.reduce((acc, item) => acc + (item.company !== 'rashu' ? item.invoiceDiscountPrice : 0), 0)),
+                    extraDiscountPrice: Math.round(products.reduce((acc, item) => acc + (item.company !== 'rashu' ? item.extraDiscountPrice : 0), 0)),
+                    totalPrice: Math.round(products.reduce((acc, item) => acc + (item.company !== 'rashu' ? item.totalPrice : 0), 0)),
+                }
+                setFooter(footer)
+            } else {
+                const footer = {
+                    label: 'Total',
+                    quantity: products.reduce((acc, item) => acc + (item.quantity + (item.quantityHome || 0)), 0),
+                    company: '-',
+                    price: Math.round(products.reduce((acc, item) => acc + item.price, 0)),
+                    invoiceDiscountPrice: Math.round(products.reduce((acc, item) => acc + item.invoiceDiscountPrice, 0)),
+                    extraDiscountPrice: Math.round(products.reduce((acc, item) => acc + item.extraDiscountPrice, 0)),
+                    totalPrice: Math.round(products.reduce((acc, item) => acc + item.totalPrice, 0)),
+                }
+                setFooter(footer)
             }
-            setFooter(footer)
         }
-        console.log('products', products);
     }, [products])
 
     useEffect(() => { handleCompanyChange() }, [selectedCompany])

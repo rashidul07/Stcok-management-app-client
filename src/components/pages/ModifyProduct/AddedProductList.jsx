@@ -5,23 +5,38 @@ import UseContext from "../../contexts/UseContext";
 const AddedProductList = ({ localProducts, setLocalProducts, productType, totalPrice }) => {
     const { isLoading, setIsLoading, user, setAlertMessage } = UseContext();
     const handleDelete = (id) => {
-        const newLocalProducts = localProducts.filter(product => product._id !== id);
+        //need window.confirm
         const deletedItem = localProducts.find(product => product._id === id);
-        setLocalProducts(newLocalProducts);
+        const confirmBox = window.confirm(`Delete ${deletedItem?.label}?`);
+        if (confirmBox === true) {
+            const newLocalProducts = localProducts.filter(product => product._id !== id);
+            setLocalProducts(newLocalProducts);
+        }
     }
 
     const handleModify = async () => {
         setIsLoading(true);
-        const finalData = localProducts.map(product => {
-            return {
-                _id: product._id,
-                quantity: product.oldQuantity - product.quantity
-            }
-        });
+        let finalData = [];
+        if (productType.value === 'product') {
+            finalData = localProducts.map(product => {
+                return {
+                    _id: product._id,
+                    quantity: product.oldQuantity - product.quantity
+                }
+            });
+        } else {
+            finalData = localProducts.map(product => {
+                return {
+                    _id: product._id,
+                    quantity: product.oldQuantity - product.quantity,
+                    totalPrice: product.extraDiscountPrice * (product.oldQuantity - product.quantity + (product.quantityHome || 0))
+                }
+            });
+        }
+
         const confirmBox = window.confirm(`Modify All Products?`);
         if (confirmBox === true) {
             const response = await fetchData('modifyProduct', 'POST', finalData, { type: productType.value })
-            console.log(response);
             if (response.status === 'success') {
                 // from localProducts remove all the products which are already in database with _id
                 const newProducts = localProducts.map(pd => {
@@ -38,13 +53,12 @@ const AddedProductList = ({ localProducts, setLocalProducts, productType, totalP
                     }
                 });
 
-                //history r kaj korte hobe
-                // // save history for new products
-                // if (productType.value === 'product') {
-                //     fetchData('addHistory', 'POST', newProducts)
-                // } else {
-                //     fetchData('addStockHistory', 'POST', newProducts)
-                // }
+                // save history for new products
+                if (productType.value === 'product') {
+                    fetchData('addHistory', 'POST', newProducts)
+                } else {
+                    fetchData('addStockHistory', 'POST', newProducts)
+                }
 
                 setLocalProducts([]);
                 localStorage.removeItem(productType.value === "product" ? 'modifiedproductList' : 'modifiedstockList');
@@ -53,7 +67,7 @@ const AddedProductList = ({ localProducts, setLocalProducts, productType, totalP
                 // give a reload after 5 seconds
                 setTimeout(() => {
                     window.location.reload();
-                }, 5000);
+                }, 10000);
             }
             else {
                 setAlertMessage({ message: response.message, type: 'error' });
@@ -79,7 +93,7 @@ const AddedProductList = ({ localProducts, setLocalProducts, productType, totalP
                 </div>
                 {
                     productType?.value === 'stock' && (
-                        <p className="text-center my-2 text-black">Total Product Amount: {totalPrice}</p>
+                        <p className="text-center my-2 text-black">Total Product Amount: {Math.round(totalPrice)}</p>
                     )
                 }
                 <div className="text-center mt-4">

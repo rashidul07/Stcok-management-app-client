@@ -2,8 +2,8 @@ import { useState } from "react";
 import Buttons from "./Buttons";
 import DeleteHandlerBtn from "./DeleteHandlerBtn";
 import EditableField from "./EditableField";
-import './localStorage.css';
 import ProductInfo from "./ProductInfo";
+import './localStorage.css';
 
 const LocalStorageProduct = ({ localProducts, storageName, setLocalProducts, buttonText, btnOnClick, isLoading }) => {
     const [editingProduct, setEditingProduct] = useState(null);

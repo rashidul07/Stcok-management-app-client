@@ -28,7 +28,7 @@ const ModifyProduct = () => {
         if (productType?.value === 'stock') {
             let total = 0;
             localProducts.forEach(product => {
-                total += product.price * product.quantity;
+                total += product.extraDiscountPrice * product.quantity;
             });
             setTotalPrice(total);
         }

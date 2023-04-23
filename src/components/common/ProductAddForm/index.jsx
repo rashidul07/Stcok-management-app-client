@@ -68,7 +68,7 @@ const ProductAddForm = ({ productType }) => {
             setChangeFieldData
         );
     }, [productDetails, localProducts, deletedProduct, alertMessage, user, productList])
-
+    console.log(localProducts);
     return (
         <InputFieldsContainer
             title={productType === 'stock' ? 'Stock' : 'Product'}
@@ -80,7 +80,12 @@ const ProductAddForm = ({ productType }) => {
         >
             {
                 productType === 'stock' ?
-                    <LocalStorageProduct localProducts={localProducts} storageName="stockList" setLocalProducts={setLocalProducts} buttonText="Submit" isLoading={isLoading} btnOnClick={handleProductSubmit} />
+                    <>
+                        <LocalStorageProduct localProducts={localProducts} storageName="stockList" setLocalProducts={setLocalProducts} buttonText="Submit" isLoading={isLoading} btnOnClick={handleProductSubmit} />
+                        <p className="text-center mt-6">
+                            Total Product Price : {localProducts.reduce((total, product) => total + (product.totalPrice), 0).toFixed(2)}
+                        </p>
+                    </>
                     : (
                         <>
                             <LocalStorageProduct localProducts={localProducts} storageName="productList" setLocalProducts={setLocalProducts} buttonText="Submit" btnOnClick={handleProductSubmit} isLoading={isLoading} />

@@ -6,9 +6,10 @@ import Alert from "../../Libs/Alert";
 import Spinner from "../../Libs/Spinner";
 import UseContext from "../../contexts/UseContext";
 
-const RemoveForm = ({ localProducts, setLocalProducts, productType, setProductType, modifiedProductList, setModifiedProductList }) => {
+const RemoveForm = ({ localProducts, setLocalProducts, productType, setProductType }) => {
+    const [modifiedProductList, setModifiedProductList] = useState([]);
     const [productDetails, setProductDetails] = useState({ quantity: 1 });
-    const { productList, user, setProductList, getStockProductList, getProductList, alertMessage, setAlertMessage, changeFieldData, setChangeFieldData, isLoading } = UseContext();
+    const { user, alertMessage, setAlertMessage, isLoading, shortProduct, stockProduct } = UseContext();
     const updateProductDetails = (key, value) => {
         setProductDetails({ ...productDetails, [key]: value });
     }
@@ -33,39 +34,20 @@ const RemoveForm = ({ localProducts, setLocalProducts, productType, setProductTy
             return;
         }
         document.querySelector('.clear-icon').click();
-
         setLocalProducts([...localProducts, productDetails]);
         setProductDetails({ quantity: 1 });
     }
 
     useEffect(() => {
-        if (productType?.value === 'stock')
-            getStockProductList();
-        else if (productType?.value === 'product')
-            getProductList();
-    }, [productType])
-
-    useEffect(() => {
         if (productType?.value) {
-            let id = 0;
+            const productList = productType?.value === 'stock' ? stockProduct : shortProduct;
             const modifiedData = productList.map(product => {
                 //check if product is already in localProducts
                 const isAlreadyAdded = localProducts.find(pd => pd._id === product._id);
-                console.log('isAlreadyAdded', isAlreadyAdded, product);
                 if (!isAlreadyAdded) {
-                    if (!product.label) {
-                        return {
-                            ...product,
-                            id: id++,
-                            label: product.name + ' (' + product.quantity + ')',
-                        }
-                    } else {
-                        return {
-                            ...product,
-                            id: id++,
-                            label: product.label + ' (' + product.quantity + ')',
-                            name: product.label
-                        }
+                    return {
+                        ...product,
+                        label: product.label + ' (' + product.quantity + ')',
                     }
                 }
 
@@ -73,8 +55,7 @@ const RemoveForm = ({ localProducts, setLocalProducts, productType, setProductTy
             setModifiedProductList(modifiedData)
             setProductDetails({ quantity: 1 })
         }
-    }, [productList, productType?.value, localProducts])
-    console.log('localProducts', modifiedProductList);
+    }, [productType?.value, localProducts])
 
     const handleOnSearch = (string, results) => {
         if (!productType || !productType.value) {
@@ -87,7 +68,7 @@ const RemoveForm = ({ localProducts, setLocalProducts, productType, setProductTy
         if (productType.value === 'product') {
             setProductDetails({
                 _id: value._id,
-                label: value.label ? value.label : value.name,
+                label: value.label,
                 oldQuantity: value.quantity,
                 quantity: 1,
                 rId: value.rId
@@ -105,7 +86,7 @@ const RemoveForm = ({ localProducts, setLocalProducts, productType, setProductTy
     const formatResult = (item) => {
         return (
             <>
-                <span style={{ display: 'block', textAlign: 'left' }}>{item.label ? item.label : item.name}</span>
+                <span style={{ display: 'block', textAlign: 'left' }} className="bg-blue-100 p-2">{item.label}</span>
             </>
         )
     }

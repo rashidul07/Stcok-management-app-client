@@ -9,14 +9,61 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState({})
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [shortProduct, setShortProduct] = useState([])
+  const [stockProduct, setStockProduct] = useState([])
+  const [productType, setProductType] = useState('short')
   const [productList, setProductList] = useState([])
   const [currentDataType, setCurrentDataType] = useState('')
   const [alertMessage, setAlertMessage] = useState({ message: '', type: '' });
-  const [changeFieldData, setChangeFieldData] = useState([]);
+  const [changeFieldData, setChangeFieldData] = useState(JSON.parse(localStorage.getItem(`${productType}changeFieldData`)) || []);
   const [productHistory, setProductHistory] = useState([]);
   const [stockProductHistory, setStockProductHistory] = useState([]);
   const [productLength, setProductLength] = useState({});
   const auth = getAuth();
+
+  const getAllProduct = async () => {
+    if (!user.email) {
+      setError('Please login first')
+      return;
+    }
+
+    setIsLoading(true)
+    const response = await fetchData('productList', 'GET', {}, { type: 'product', user: user.email })
+    if (response.status === 'success') {
+      const modifiedData = response.data.map(product => {
+        if (!product.label) {
+          return { ...product, label: product.name, id: product._id }
+        } else if (!product.name) {
+          return { ...product, name: product.label, id: product._id }
+        } else {
+          return { ...product, id: product._id };
+        }
+      })
+      setShortProduct(modifiedData)
+    }
+    if (response.status === 'error') {
+      setError(response);
+    }
+    const stockResponse = await fetchData('productList', 'GET', {}, { type: 'stock', user: user.email })
+    if (stockResponse.status === 'success') {
+      const modifiedData = stockResponse.data.map(product => {
+        if (!product.label) {
+          return { ...product, label: product.name, id: product._id }
+        } else if (!product.name) {
+          return { ...product, name: product.label, id: product._id }
+        } else {
+          return { ...product, id: product._id };
+        }
+      })
+      setStockProduct(modifiedData)
+    }
+    if (stockResponse.status === 'error') {
+      setError(stockResponse);
+    }
+    setIsLoading(false)
+  }
+
+
 
   const getProductList = async () => {
     if (user.email && currentDataType !== 'product') {
@@ -26,8 +73,8 @@ export const AuthProvider = ({ children }) => {
       if (response.status === 'success') {
         const modifiedData = response.data.map(product => {
           if (!product.label)
-            return { ...product, label: product.name }
-          return product;
+            return { ...product, label: product.name, id: product._id }
+          return { ...product, id: product._id }
         })
         setProductList(modifiedData)
         setCurrentDataType('product')
@@ -144,6 +191,15 @@ export const AuthProvider = ({ children }) => {
       });
   }
 
+  useEffect(() => {
+    if (user.email) {
+      getAllProduct();
+    }
+  }, [user])
+
+  useEffect(() => {
+    setChangeFieldData(JSON.parse(localStorage.getItem(`${productType}changeFieldData`)) || [])
+  }, [productType])
 
   useEffect(() => {
     setIsLoading(true)
@@ -179,13 +235,13 @@ export const AuthProvider = ({ children }) => {
     logOut,
     login,
     isLoading,
+    setIsLoading,
     googleLogin,
     createUser,
     productList,
     setProductList,
     getProductList,
     getStockProductList,
-    setIsLoading,
     alertMessage,
     setAlertMessage,
     changeFieldData,
@@ -194,7 +250,13 @@ export const AuthProvider = ({ children }) => {
     stockProductHistory,
     getAllHistory,
     getProductsLength,
-    productLength
+    productLength,
+    shortProduct,
+    setShortProduct,
+    stockProduct,
+    setStockProduct,
+    productType,
+    setProductType,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

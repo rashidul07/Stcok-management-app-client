@@ -87,7 +87,7 @@ const TableSettings = {
         },
         {
             name: 'Total',
-            selector: row => row.totalPrice,
+            selector: row => Math.round(row.totalPrice),
             className: 'table-column extra',
         }
     ],

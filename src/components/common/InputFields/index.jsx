@@ -1,26 +1,19 @@
-import { Hint } from 'react-autocomplete-hint';
+import { ReactSearchAutocomplete } from 'react-search-autocomplete';
 import Select from 'react-select';
-import UseContext from '../../contexts/UseContext';
-import { handleAddToListClick, handleOnFill, updateProductDetails } from "../../Helper/AddProductHandler";
+import { handleAddToListClick, handleClear, handleOnFill, updateProductDetails } from "../../Helper/AddProductHandler";
 import { storeData } from "../../Helper/storeData";
 import Alert from "../../Libs/Alert";
+import UseContext from '../../contexts/UseContext';
 
-const InputFields = ({ modifiedProductList = [], productDetails = {}, setProductDetails = () => { }, options, title }) => {
+const InputFields = ({ modifiedProductList, productDetails, options, productType }) => {
     const { alertMessage } = UseContext();
 
-    const handleClear = (e) => {
-        e.preventDefault();
-        // give a alert to confirm the clear action
-        if (window.confirm('Are you sure you want to clear the fields?')) {
-            if (title === 'Product') {
-                setProductDetails({
-                    quantity: 1
-                });
-            }
-            if (title === 'Stock') {
-                setProductDetails({ quantity: 1, invoiceDiscount: 14.20, extraDiscount: 0 });
-            }
-        }
+    const formatResult = (item) => {
+        return (
+            <>
+                <span style={{ display: 'block', textAlign: 'left' }} className='bg-gray-200'>{item.label + ' (' + item.quantity + ')' + (item.quantityHome ? ' (' + item.quantityHome + ')' : '')}</span>
+            </>
+        )
     }
 
     return (
@@ -30,6 +23,22 @@ const InputFields = ({ modifiedProductList = [], productDetails = {}, setProduct
                     Product Name
                 </label>
                 <div className='productNameContainer'>
+                    <div>
+                        <ReactSearchAutocomplete
+                            items={modifiedProductList}
+                            onSearch={(string) => {
+                                updateProductDetails('label', string)
+                            }}
+                            onSelect={handleOnFill}
+                            autoFocus
+                            formatResult={formatResult}
+                            showIcon={false}
+                            onClear={handleClear}
+                            styling={{ borderRadius: '4px', border: '2px solid black', position: 'relative', zIndex: 1888888 }}
+                        />
+                    </div>
+                </div>
+                {/* <div className='productNameContainer'>
                     <Hint options={modifiedProductList} allowTabFill onFill={handleOnFill}>
                         <input
                             id="productName"
@@ -45,7 +54,7 @@ const InputFields = ({ modifiedProductList = [], productDetails = {}, setProduct
                     <button className="btn btn-circle btn-outline clear-button border-none" style={{ backgroundColor: "transparent", borderColor: "transparent", boxShadow: "none", color: "inherit", outline: "none" }} onClick={handleClear}>
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
-                </div>
+                </div> */}
             </div>
             <div>
                 <label htmlFor="company" className="block font-medium">
@@ -72,7 +81,7 @@ const InputFields = ({ modifiedProductList = [], productDetails = {}, setProduct
                 />
             </div>
             {
-                title === 'Stock' && (
+                productType === 'stock' && (
                     <>
                         <div>
                             <label htmlFor="quantityHome" className="block font-medium">

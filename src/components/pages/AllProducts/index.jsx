@@ -1,11 +1,10 @@
 import DisplayProduct from "../../common/DisplayProduct";
+import UseContext from "../../contexts/UseContext";
 
 const AllProducts = () => {
-
+    const { productType } = UseContext();
     return (
-        <DisplayProduct
-            type="product"
-        />
+        <DisplayProduct />
     )
 }
 

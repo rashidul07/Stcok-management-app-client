@@ -49,7 +49,7 @@ export const storeData = {
         { value: 'square', label: 'Square' },
         { value: 'unihealth', label: 'Uni Health' },
         { value: 'others', label: 'All Others' },
-        { value: 'rashu', label: 'Rashu`s Product' },
+        { value: 'rashu', label: 'Rashu Product' },
     ],
     productType: [
         { value: '', label: 'Please select a Type' },

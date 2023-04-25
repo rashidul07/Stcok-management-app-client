@@ -22,7 +22,13 @@ export default function UseContext() {
         stockProductHistory,
         getAllHistory,
         getProductsLength,
-        productLength
+        productLength,
+        shortProduct,
+        setShortProduct,
+        stockProduct,
+        setStockProduct,
+        productType,
+        setProductType,
     } = useContext(AuthContext);
 
     return {
@@ -46,6 +52,12 @@ export default function UseContext() {
         stockProductHistory,
         getAllHistory,
         getProductsLength,
-        productLength
+        productLength,
+        shortProduct,
+        setShortProduct,
+        stockProduct,
+        setStockProduct,
+        productType,
+        setProductType,
     }
 }

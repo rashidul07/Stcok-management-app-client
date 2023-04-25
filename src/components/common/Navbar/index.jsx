@@ -72,12 +72,6 @@ const Navbar = () => {
                                         <Link to="shortProducts" >Products List</Link>
                                     </li>
                                     <li className="text-gray-600 hover:text-blue-600">
-                                        <Link to="addStock">Add Stock Products</Link>
-                                    </li>
-                                    <li className="text-gray-600 hover:text-blue-600">
-                                        <Link to="stockProducts">Stock Products List</Link>
-                                    </li>
-                                    <li className="text-gray-600 hover:text-blue-600">
                                         <Link to="modifyProduct">Modify Product</Link>
                                     </li>
                                     <li className="text-gray-600 hover:text-blue-600">

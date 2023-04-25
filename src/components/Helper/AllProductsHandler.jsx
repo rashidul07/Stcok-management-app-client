@@ -40,10 +40,6 @@ class ProductHandler {
         this.type = type
     }
 
-    updateProductsAndProductList = () => {
-
-    }
-
     handleCompanyChange = () => {
         if (this.selectedCompany?.value === '') {
             this.setProducts(this.productList)
@@ -89,9 +85,27 @@ class ProductHandler {
                     status: product.status === 'complete' ? 'pending' : 'complete'
                 }
             })
-            const response = await fetchData('addProduct', 'POST', { productsCollection: list }, { type: this.type, user: this.user.email })
+            const response = await fetchData('addProduct', 'POST', { productsCollection: list }, { type: this.type === 'short' ? 'product' : 'stock', user: this.user.email })
 
             if (response.status === 'success') {
+                const historyData = this.selectedProducts.map(pd => {
+                    return {
+                        productId: pd._id,
+                        label: pd.label,
+                        date: new Date().toISOString(),
+                        user: this.user.email,
+                        operation: 'update',
+                        rId: pd.rId,
+                        productData: {
+                            status: [pd.status, pd.status === 'complete' ? 'pending' : 'complete'],
+                        }
+                    }
+                })
+                if (this.type === 'short') {
+                    fetchData('addHistory', 'POST', historyData)
+                } else if (this.type === 'stock') {
+                    fetchData('addStockHistory', 'POST', historyData)
+                }
                 this.setSelectedProducts([])
                 this.setTextareaValue(null)
                 this.setToggleClearRows(true)
@@ -157,7 +171,7 @@ class ProductHandler {
                 productData: {}
             };
             for (const key in product) {
-                if (product[key] !== this.editableRowData[key]) {
+                if (key === 'quantity' || key === 'quantityHome' || product[key] !== this.editableRowData[key]) {
 
                     //need to ignore some property like name, updated_at and updated_by
                     if (key === 'name' || key === 'updated_at' || key === 'updated_by' ||
@@ -166,6 +180,10 @@ class ProductHandler {
                         continue;
                     }
                     if (key === 'company' && product[key] === this.editableRowData[key].value) {
+                        continue;
+                    }
+                    if (key === 'quantity' || key === 'quantityHome') {
+                        changeFieldData['productData'][key] = [product[key], this.editableRowData[key] - product[key]];
                         continue;
                     }
                     changeFieldData['productData'][key] = [product[key], this.editableRowData[key]];
@@ -182,7 +200,7 @@ class ProductHandler {
         }
         const changeFieldData = this.updateChangeableFieldData();
         this.setIsTableLoading(true);
-        const response = await fetchData('addProduct', 'POST', { productsCollection: [this.editableRowData] }, { type: this.type, user: this.user.email })
+        const response = await fetchData('addProduct', 'POST', { productsCollection: [this.editableRowData] }, { type: this.type === 'short' ? 'product' : 'stock', user: this.user.email })
         if (response.status === 'success') {
             this.setAlertMessage({ message: 'Product updated successfully', type: 'success' })
             //change the status of the products as same as selected products
@@ -204,7 +222,7 @@ class ProductHandler {
             const companyDetails = storeData.companyList.find(company => company.value === this.editableRowData.company)
             this.setSelectedCompany(companyDetails)
             this.setEditableRowData({})
-            if (this.type === 'product') {
+            if (this.type === 'short') {
                 fetchData('addHistory', 'POST', [changeFieldData])
             } else if (this.type === 'stock') {
                 fetchData('addStockHistory', 'POST', [changeFieldData])
@@ -221,7 +239,7 @@ class ProductHandler {
     handleSelectedProductDelete = async () => {
         if (window.confirm(`Want to delete ${this.selectedProducts.length} products`)) {
             this.setIsTableLoading(true);
-            const response = await fetchData('productDelete', 'DELETE', this.selectedProducts, { type: this.type, user: this.user.email })
+            const response = await fetchData('productDelete', 'DELETE', this.selectedProducts, { type: this.type === 'short' ? 'product' : 'stock', user: this.user.email })
             if (response.status === 'success') {
                 // add history for deleted products
                 const historyData = this.selectedProducts.map(pd => {
@@ -235,7 +253,7 @@ class ProductHandler {
                         productData: pd
                     }
                 })
-                if (this.type === 'product') {
+                if (this.type === 'short') {
                     fetchData('addHistory', 'POST', historyData)
                 } else if (this.type === 'stock') {
                     fetchData('addStockHistory', 'POST', historyData)

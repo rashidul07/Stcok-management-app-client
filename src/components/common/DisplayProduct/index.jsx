@@ -59,7 +59,6 @@ const DisplayProduct = () => {
         )
     }, [selectedCompany, products, shortProduct, stockProduct, TextareaValue, selectedProducts, editableRowData, productType])
 
-
     useEffect(() => { if (selectedCompany === null) setProducts(productType === 'short' ? shortProduct : stockProduct) }, [shortProduct, stockProduct])
 
     useEffect(() => {

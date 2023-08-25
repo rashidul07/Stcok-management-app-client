@@ -29,6 +29,7 @@ const Dashboard = () => {
             <div className="my-12 mx-2">
                 <StatisticsCardData last7DaysCount={last7DaysCount} setLast7DaysCount={setLast7DaysCount} />
                 <Table type={'product'} />
+                <Table type={'stock'} />
 
             </div>
     )

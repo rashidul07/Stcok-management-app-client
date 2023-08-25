@@ -199,7 +199,6 @@ class ProductHandler {
             return
         }
         const changeFieldData = this.updateChangeableFieldData();
-        console.log(changeFieldData)
         this.setIsTableLoading(true);
         const response = await fetchData('addProduct', 'POST', { productsCollection: [this.editableRowData] }, { type: this.type === 'short' ? 'product' : 'stock', user: this.user.email })
         if (response.status === 'success') {

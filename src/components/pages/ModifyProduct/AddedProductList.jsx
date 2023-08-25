@@ -45,10 +45,10 @@ const AddedProductList = ({ localProducts, setLocalProducts, productType, totalP
                         label: pd.label.split(' (')[0],
                         date: new Date().toISOString(),
                         user: user.email,
-                        operation: pd.oldQuantity === Number(pd.quantity) ? 'delete' : 'update',
+                        operation: 'update',
                         rId: pd.rId,
                         productData: {
-                            quantity: [pd.oldQuantity, -Number(pd.quantity)]
+                            quantity: [pd.oldQuantity, pd.oldQuantity - pd.quantity]
                         }
                     }
                 });

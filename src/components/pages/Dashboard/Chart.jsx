@@ -1,88 +1,80 @@
+import React from 'react';
 import {
     BarElement,
     CategoryScale,
-    Chart as ChartJS,
+    Chart,
     Legend,
     LinearScale,
     Title,
     Tooltip
 } from "chart.js";
-import { Bar } from "react-chartjs-2";
+import { Bar } from 'react-chartjs-2';
 
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend
-);
+const ChartComponent = ({ chartData }) => {
+    const dates = Object.keys(chartData);
+    const insertCounts = dates.map(date => chartData[date].insert);
+    const updateCounts = dates.map(date => chartData[date].update);
+    const deleteCounts = dates.map(date => chartData[date].delete);
 
-export const labels = [
-    new Date().toLocaleString("en-US", {
-        timeZone: "Asia/Dhaka",
-        dateStyle: "short"
-    }),
-    new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000).toLocaleString(
-        "en-US",
-        {
-            timeZone: "Asia/Dhaka",
-            dateStyle: "short"
-        }
-    ),
-    new Date(new Date().getTime() - 2 * 24 * 60 * 60 * 1000).toLocaleString(
-        "en-US",
-        {
-            timeZone: "Asia/Dhaka",
-            dateStyle: "short"
-        }
-    ),
-    new Date(new Date().getTime() - 3 * 24 * 60 * 60 * 1000).toLocaleString(
-        "en-US",
-        {
-            timeZone: "Asia/Dhaka",
-            dateStyle: "short"
-        }
-    ),
-    new Date(new Date().getTime() - 4 * 24 * 60 * 60 * 1000).toLocaleString(
-        "en-US",
-        {
-            timeZone: "Asia/Dhaka",
-            dateStyle: "short"
-        }
-    ),
-    new Date(new Date().getTime() - 5 * 24 * 60 * 60 * 1000).toLocaleString(
-        "en-US",
-        {
-            timeZone: "Asia/Dhaka",
-            dateStyle: "short"
-        }
-    ),
-    new Date(new Date().getTime() - 6 * 24 * 60 * 60 * 1000).toLocaleString(
-        "en-US",
-        {
-            timeZone: "Asia/Dhaka",
-            dateStyle: "short"
-        }
-    )
-];
+    Chart.register(
+        CategoryScale,
+        LinearScale,
+        BarElement,
+        Title,
+        Tooltip,
+        Legend
+    );
 
-const Chart = ({ data = [], title }) => {
-    const options = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: "top"
+    const data = {
+        labels: dates,
+        datasets: [
+            {
+                label: 'Insert',
+                data: insertCounts,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
             },
-            title: {
-                display: true,
-                text: title
-            }
-        }
+            {
+                label: 'Update',
+                data: updateCounts,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1,
+            },
+            {
+                label: 'Delete',
+                data: deleteCounts,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1,
+            },
+        ],
     };
-    return (
-        <Bar options={options} data={data} />
-    )
-}
 
-export default Chart;
+    const options = {
+        scales: {
+            x: {
+                type: 'category', // Use 'time' axis type for time-based data
+                time: {
+                    unit: 'day', // Display by day
+                },
+            },
+            y: {
+                beginAtZero: true,
+            },
+        },
+    };
+
+    return (
+        <div>
+            <h2>Daily Operation Counts</h2>
+            <Bar
+                data={data}
+                options={options}
+            />
+        </div>
+    );
+};
+
+export default ChartComponent;

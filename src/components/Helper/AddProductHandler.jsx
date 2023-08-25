@@ -356,7 +356,6 @@ class AddProductHandler {
                 // save history for already existing products
 
                 if (this.changeFieldData.length > 0) {
-                    console.log(this.changeFieldData)
                     if (this.type === 'short') {
                         fetchData('addHistory', 'POST', this.changeFieldData)
                     } else {

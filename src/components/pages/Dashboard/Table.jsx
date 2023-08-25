@@ -9,10 +9,14 @@ const Table = ({ data }) => {
         {
             name: 'label',
             selector: row => row.label,
+            width: "100px",
+            style: { paddingLeft: "5px", paddingRight: "5px" }
         },
         {
             name: "user",
             selector: row => row.user.split('@')[0],
+            width: "60px",
+            style: { paddingLeft: "5px", paddingRight: "5px" }
         }
     ]
     return (
@@ -20,7 +24,7 @@ const Table = ({ data }) => {
             columns={columns}
             data={data}
             expandableRows
-            className="mt-4"
+            className="mt-4 w-full overflow-hidden"
             expandableRowsComponent={({ data }) => {
                 console.log(data)
                 return (
@@ -35,7 +39,10 @@ const Table = ({ data }) => {
                         {
                             data.operation === 'update' ?
                                 Object.keys(data.productData).map((key, index) => {
-                                    return data.productData[key][1] ? <p key={index} className="text-xs">{key}: {data.productData[key][0]} to {typeof data.productData[key][1] === 'string' ? data.productData[key][1] : data.productData[key][0] - data.productData[key][1]} at {(new Date(data.date)).toString().slice(0, 25)}</p> : ''
+                                    return typeof data.productData[key][1] === 'string' ? <p key={index} className="text-xs">{key}: {data.productData[key][0]} to {data.productData[key][1]}  at {(new Date(data.date)).toString().slice(0, 25)} </p> :
+                                        (data.productData[key][1] > 0 ? <p key={index} className="text-xs">Increase Quantity by {data.productData[key][1]} - previous {data.productData[key][0]} now - {
+                                            Number(data.productData[key][0]) + Number(data.productData[key][1])}  at {(new Date(data.date)).toString().slice(0, 25)}</p> : (data.productData[key][1] < 0 ? <p key={index} className="text-xs">Decrease Quantity by {data.productData[key][1]} - previous {data.productData[key][0]} now - {
+                                                data.productData[key][0] + data.productData[key][1]}  at {(new Date(data.date)).toString().slice(0, 25)} </p> : ''))
                                 }) : ''
                         }
                     </div>
@@ -49,17 +56,31 @@ const Table = ({ data }) => {
                 },
             },
             {
-                when: row => (row.operation === 'update' && row.productData.quantity[1] < 0), // decrease
+                when: row => (row.operation === 'update' && row.productData.quantity?.[1] < 0), // decrease number
                 style: {
                     backgroundColor: '#ea9f9f',
                     color: '#0e1a2a',
                 },
             },
             {
-                when: row => (row.operation === 'update' && row.productData.quantity[1] > 0), // increase
+                when: row => (row.operation === 'update' && row.productData.quantity?.[1] > 0), // increase number
                 style: {
                     backgroundColor: '#E8F6EF',
                     color: 'blue',
+                },
+            },
+            {
+                when: row => (row.operation === 'update' && row.productData["status"]?.[1]), // string
+                style: {
+                    backgroundColor: '#E8F6EF',
+                    color: 'magenta',
+                },
+            },
+            {
+                when: row => (row.operation === 'update' && row.productData["company"]?.[1]), // string
+                style: {
+                    backgroundColor: '#E8F6EF',
+                    color: 'magenta',
                 },
             },
             {

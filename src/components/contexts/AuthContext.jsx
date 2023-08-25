@@ -112,10 +112,10 @@ export const AuthProvider = ({ children }) => {
       const response = await fetchData('getHistory', 'GET', {}, { email: user.email, count, type, page })
       if (response.status === 'success') {
         if (type === 'stock') {
-          setStockHistory([...stockHistory, ...response.data.historyData])
+          setStockHistory([...response.data.historyData, ...stockHistory])
           setStockHistoryLength(response.data.historyCount)
         } else {
-          setShortHistory([...shortHistory, ...response.data.historyData])
+          setShortHistory([...response.data.historyData, ...shortHistory])
           setShortHistoryLength(response.data.historyCount)
         }
       }

@@ -12,6 +12,7 @@ import ErrorPage from './components/pages/Error';
 import Home from './components/pages/Home';
 import Login from './components/pages/Login';
 import ModifyProduct from "./components/pages/ModifyProduct";
+import Print from "./components/pages/Print";
 
 const HeaderLayout = () => (
   <>
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
       {
         path: '/modifyProduct',
         element: <ModifyProduct />,
+      },
+      {
+        path: '/print',
+        element: <Print />,
       },
       {
         path: '*',

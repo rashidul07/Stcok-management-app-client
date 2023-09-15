@@ -38,23 +38,6 @@ const InputFields = ({ modifiedProductList, productDetails, options, productType
                         />
                     </div>
                 </div>
-                {/* <div className='productNameContainer'>
-                    <Hint options={modifiedProductList} allowTabFill onFill={handleOnFill}>
-                        <input
-                            id="productName"
-                            type="text"
-                            value={productDetails?.label || ''}
-                            onChange={(event) => {
-                                updateProductDetails('label', event.target.value)
-                            }}
-                            className="font-bold bg-white py-1 px-2 rounded-md border-gray-600 my-1 border-2 text-amber-500 w-full"
-                        >
-                        </input>
-                    </Hint>
-                    <button className="btn btn-circle btn-outline clear-button border-none" style={{ backgroundColor: "transparent", borderColor: "transparent", boxShadow: "none", color: "inherit", outline: "none" }} onClick={handleClear}>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                    </button>
-                </div> */}
             </div>
             <div>
                 <label htmlFor="company" className="block font-medium">

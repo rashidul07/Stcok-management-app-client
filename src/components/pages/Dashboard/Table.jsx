@@ -26,7 +26,6 @@ const Table = ({ data }) => {
             expandableRows
             className="mt-4 w-full overflow-hidden"
             expandableRowsComponent={({ data }) => {
-                console.log(data)
                 return (
                     <div className="flex flex-col mr-2 ml-2">
                         {

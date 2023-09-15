@@ -276,23 +276,20 @@ class AddProductHandler {
 
     handleDelete = (id) => {
         const removedProduct = this.localProducts.find(p => p.rId === id);
-        console.log(1, removedProduct)
         const confirmBox = window.confirm(`Are you sure to delete ${removedProduct.label}?`);
         if (confirmBox === true) {
             const updatedProducts = this.localProducts.filter(p => p.rId !== id);
             this.setLocalProducts(updatedProducts);
-            console.log(2, updatedProducts)
 
             //if change field data contain the deleted product then remove it
             const changeFieldDataIndex = this.changeFieldData.findIndex(c => c.rId === id);
-            console.log(3, changeFieldDataIndex)
             if (changeFieldDataIndex !== -1) {
                 this.changeFieldData.splice(changeFieldDataIndex, 1);
                 localStorage.setItem(`${this.type}changeFieldData`, JSON.stringify(this.changeFieldData));
             }
             //also remove from modified product list
             if (!removedProduct._id) {
-                const updatedModifiedProduct = this.modifiedProductList.filter(p => p.rId !== id);
+                const updatedModifiedProduct = this.modifiedProductList.filter(p => p?.rId !== id);
                 this.setModifiedProductList(updatedModifiedProduct);
             } else {
                 //find product to the product list with find method delete current found product and add original product to modified product list

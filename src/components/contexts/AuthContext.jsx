@@ -16,8 +16,10 @@ export const AuthProvider = ({ children }) => {
   const [currentDataType, setCurrentDataType] = useState('')
   const [alertMessage, setAlertMessage] = useState({ message: '', type: '' });
   const [changeFieldData, setChangeFieldData] = useState(JSON.parse(localStorage.getItem(`${productType}changeFieldData`)) || []);
-  const [productHistory, setProductHistory] = useState([]);
-  const [stockProductHistory, setStockProductHistory] = useState([]);
+  const [shortHistory, setShortHistory] = useState([]);
+  const [shortHistoryLength, setShortHistoryLength] = useState(0);
+  const [stockHistory, setStockHistory] = useState([]);
+  const [stockHistoryLength, setStockHistoryLength] = useState(0);
   const [productLength, setProductLength] = useState({});
   const auth = getAuth();
 
@@ -102,27 +104,28 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  const getAllHistory = async () => {
-    //call both getHistory and getStockHistory api and set the data
+  const getHistory = async (user, count, type, page, marge) => {
+    if (type === 'short' && shortHistory.length && !marge) return;
+    if (type === 'stock' && stockHistory.length && !marge) return
     if (user.email) {
       setIsLoading(true)
-      const response = await fetchData('getHistory', 'GET', {}, { user: user.email })
+      const response = await fetchData('getHistory', 'GET', {}, { email: user.email, count, type, page })
       if (response.status === 'success') {
-        setProductHistory(response.data)
+        if (type === 'stock') {
+          setStockHistory([...response.data.historyData, ...stockHistory])
+          setStockHistoryLength(response.data.historyCount)
+        } else {
+          setShortHistory([...response.data.historyData, ...shortHistory])
+          setShortHistoryLength(response.data.historyCount)
+        }
       }
       if (response.status === 'error') {
         setError(response);
       }
-      const stockResponse = await fetchData('getStockHistory', 'GET', {}, { user: user.email })
-      if (stockResponse.status === 'success') {
-        setStockProductHistory(stockResponse.data)
-      }
-      if (stockResponse.status === 'error') {
-        setError(stockResponse);
-      }
       setIsLoading(false)
     }
   }
+
 
   const getProductsLength = async () => {
     if (user.email) {
@@ -172,13 +175,11 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(true)
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        console.log('user created');
         const user = userCredential.user;
         //update user name
         updateProfile(auth.currentUser, {
           displayName: userName
         }).then(() => {
-          console.log('user name updated');
           setIsLoading(false)
         }).catch((error) => {
           setError(error.message)
@@ -246,9 +247,11 @@ export const AuthProvider = ({ children }) => {
     setAlertMessage,
     changeFieldData,
     setChangeFieldData,
-    productHistory,
-    stockProductHistory,
-    getAllHistory,
+    shortHistoryLength,
+    shortHistory,
+    stockHistory,
+    stockHistoryLength,
+    getHistory,
     getProductsLength,
     productLength,
     shortProduct,

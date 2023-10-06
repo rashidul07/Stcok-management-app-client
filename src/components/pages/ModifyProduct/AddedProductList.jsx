@@ -1,9 +1,11 @@
 import { BsFillTrashFill } from "react-icons/bs";
 import fetchData from "../../Helper/HandleApi";
 import UseContext from "../../contexts/UseContext";
+import { useState, useEffect } from "react";
 
 const AddedProductList = ({ localProducts, setLocalProducts, productType, totalPrice }) => {
     const { isLoading, setIsLoading, user, setAlertMessage } = UseContext();
+    const [supplierWithPrice, setSupplierWithPrice] = useState({})
     const handleDelete = (id) => {
         //need window.confirm
         const deletedItem = localProducts.find(product => product._id === id);
@@ -12,6 +14,28 @@ const AddedProductList = ({ localProducts, setLocalProducts, productType, totalP
             const newLocalProducts = localProducts.filter(product => product._id !== id);
             setLocalProducts(newLocalProducts);
         }
+    }
+
+    function getSupplierPrices(data) {
+        const supplierPrices = {};
+
+        data.forEach(item => {
+            const supplier = item.supplier;
+            const quantity = item.quantity;
+            const price = item.price;
+
+            if (supplier && price !== null && price !== undefined) {
+                const totalPrice = price * quantity;
+
+                if (supplier in supplierPrices) {
+                    supplierPrices[supplier] += totalPrice;
+                } else {
+                    supplierPrices[supplier] = totalPrice;
+                }
+            }
+        });
+
+        return supplierPrices;
     }
 
     const handleModify = async () => {
@@ -75,14 +99,29 @@ const AddedProductList = ({ localProducts, setLocalProducts, productType, totalP
         }
         setIsLoading(false);
     }
+
+    useEffect(() => {
+        if (productType?.value === 'product') {
+            setSupplierWithPrice(getSupplierPrices(localProducts))
+        }
+    }, [localProducts])
+
     return (
         (localProducts.length > 0 && !isLoading) && (
             <div className="mt-4">
                 <h3 className="font-semibold mb-4 text-center bg-gray-700 border-4 border-amber-300 p-1 text-white rounded-md">Added Product <span className="text-amber-500 pl-2">{localProducts.length}</span></h3>
                 <div className="space-y-2 md:w-96">
                     {localProducts.map((product, index) => (
-                        <div key={index} className="flex items-center" style={{ marginTop: '0px' }}>
-                            <p className="text-amber-500 font-semibold text-sm w-9/12">{product.label}</p>
+                        <div key={index} className="flex justify-stretch items-center" style={{ marginTop: '0px' }}>
+                            <p className="text-amber-500 font-semibold text-sm w-6/12">{product.label}</p>
+                            {
+                                productType?.value === 'product' && (
+                                    <>
+                                        <p className="text-amber-500 font-semibold mr-4 w-20">{product?.supplier || ''}</p>
+                                        <p className="text-amber-500 font-semibold mr-6 w-6">{product?.price || ''}</p>
+                                    </>
+                                )
+                            }
                             <p className="text-amber-500 font-semibold ml-2 w-6">{product.quantity}</p>
                             <BsFillTrashFill
                                 className="text-sm font-bold text-black w-10 pl-2"
@@ -99,6 +138,16 @@ const AddedProductList = ({ localProducts, setLocalProducts, productType, totalP
                 <div className="text-center mt-4">
                     <button className={`btn btn-outline btn-primary h-9 min-h-fit w-48 ${isLoading ? 'loading' : ''}`} onClick={handleModify}>Modify List</button>
                 </div>
+                {
+                    Object.keys(supplierWithPrice)?.length ? (
+                        Object.keys(supplierWithPrice).map((key) => (
+                            <div className="flex justify-center  mt-2">
+                                <p key={key} className="text-black">{key + ' - '}</p>
+                                <p key={key} className="text-black"> {'  ---  ' + supplierWithPrice[key]}</p>
+                            </div>
+                        ))
+                    ) : ''
+                }
             </div>
         )
     )

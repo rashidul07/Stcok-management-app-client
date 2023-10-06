@@ -10,12 +10,20 @@ const RemoveForm = ({ localProducts, setLocalProducts, productType, setProductTy
     const [modifiedProductList, setModifiedProductList] = useState([]);
     const [productDetails, setProductDetails] = useState({ quantity: 1 });
     const { user, alertMessage, setAlertMessage, isLoading, shortProduct, stockProduct } = UseContext();
+    const [calculateMethod, setCalculateMethod] = useState(null)
+    const [calculatePrice, setCalculatePrice] = useState({ mrp: null, percent: null, price: null })
+    const calculateMethodOption = [
+        { label: 'Please Select', value: null },
+        { label: 'Fixed Price', value: 'fixed' },
+        { label: '% Price', value: 'percent' }
+    ]
     const updateProductDetails = (key, value) => {
         setProductDetails({ ...productDetails, [key]: value });
     }
 
     const handleAddToListClick = (e) => {
         e.preventDefault();
+
         if (!user?.email) {
             setAlertMessage({ message: 'Please login first', type: 'error' });
             return;
@@ -33,9 +41,34 @@ const RemoveForm = ({ localProducts, setLocalProducts, productType, setProductTy
             setAlertMessage({ message: 'Quantity can not be greater than the available quantity', type: 'error' });
             return;
         }
+        if (!productDetails?.quantity || productDetails?.quantity < 1) {
+            setAlertMessage({ message: 'Quantity can not be empty', type: 'error' });
+            return;
+        }
         document.querySelector('.clear-icon').click();
-        setLocalProducts([...localProducts, productDetails]);
-        setProductDetails({ quantity: 1 });
+        if (calculateMethod?.value && !productDetails?.supplier) {
+            setLocalProducts([...localProducts, { ...productDetails, supplier: `Sup-${Math.random().toString().substring(2, 5)}` }]);
+        } else if (!calculateMethod?.value && productType?.value == 'product') {
+            const products = { ...productDetails }
+            if (products.hasOwnProperty('price')) {
+                delete products.price;
+            }
+
+            if (products.hasOwnProperty('supplier')) {
+                delete products.supplier;
+            }
+
+            setLocalProducts([...localProducts, products]);
+        } else {
+            setLocalProducts([...localProducts, productDetails]);
+        }
+
+        if (calculateMethod?.value) {
+            setProductDetails(prev => ({ supplier: prev.supplier, quantity: 1 }));
+        } else {
+            setProductDetails({ quantity: 1 })
+        }
+        setCalculateMethod(prev => (prev))
     }
 
     useEffect(() => {
@@ -53,7 +86,15 @@ const RemoveForm = ({ localProducts, setLocalProducts, productType, setProductTy
 
             })
             setModifiedProductList(modifiedData)
-            setProductDetails({ quantity: 1 })
+            // ai part ta lagbe kina thik sure na pore test kore dekhte hbe
+            if (productType.value === 'product') {
+                setProductDetails(prev => ({ supplier: prev.supplier, quantity: 1, }))
+                setCalculatePrice({ mrp: null, percent: null, price: 0 })
+            } else {
+                setProductDetails({ quantity: 1 })
+                setCalculateMethod(null)
+            }
+            document.querySelector('.clear-icon')?.click();
         }
     }, [productType?.value, localProducts])
 
@@ -66,13 +107,17 @@ const RemoveForm = ({ localProducts, setLocalProducts, productType, setProductTy
 
     const handleOnSelect = (value) => {
         if (productType.value === 'product') {
-            setProductDetails({
-                _id: value._id,
-                label: value.label,
-                oldQuantity: value.quantity,
-                quantity: 1,
-                rId: value.rId
-            });
+            setProductDetails(prev => (
+                {
+                    _id: value._id,
+                    label: value.label,
+                    oldQuantity: value.quantity,
+                    quantity: 1,
+                    rId: value.rId,
+                    supplier: prev.supplier,
+                    price: prev.price,
+                }
+            ));
         } else {
             setProductDetails({
                 ...value,
@@ -90,6 +135,14 @@ const RemoveForm = ({ localProducts, setLocalProducts, productType, setProductTy
             </>
         )
     }
+
+    useEffect(() => {
+        if (calculatePrice.mrp && calculatePrice.percent) {
+            const price = calculatePrice.mrp - ((calculatePrice.mrp * calculatePrice.percent) / 100)
+            setCalculatePrice(prev => ({ ...prev, price }))
+            setProductDetails(prev => ({ ...prev, price }))
+        }
+    }, [calculatePrice.mrp, calculatePrice.percent])
 
     return (
         <form className="space-y-4 md:w-96">
@@ -111,6 +164,38 @@ const RemoveForm = ({ localProducts, setLocalProducts, productType, setProductTy
                         <Spinner />
                     </div> :
                     <>
+                        {
+                            productType?.value === 'product' && (
+                                <div>
+                                    <label htmlFor="priceCalculate" className="block font-medium">
+                                        Price Calculate Method
+                                    </label >
+                                    <Select
+                                        id="priceCalculate"
+                                        value={calculateMethod || calculateMethodOption[0]}
+                                        onChange={(value) => setCalculateMethod(value)}
+                                        className="font-bold bg-white py-1 px-2 rounded-md border-gray-600 my-1 border-2 text-amber-500 w-full"
+                                        options={calculateMethodOption}
+                                    />
+                                </div>
+                            )
+                        }
+                        {
+                            calculateMethod?.value && (
+                                <>
+                                    <label htmlFor="supplier" className="block font-medium">
+                                        Supplier
+                                    </label>
+                                    <input
+                                        id="supplier"
+                                        type="text"
+                                        value={productDetails?.supplier || ''}
+                                        onChange={(event) => updateProductDetails('supplier', event.target.value)}
+                                        className="font-bold bg-white py-1 px-2 rounded-md border-gray-600 my-1 border-2 text-amber-500 w-full"
+                                    />
+                                </>
+                            )
+                        }
                         <div>
                             <label htmlFor="productName" className="block font-medium">
                                 Product Name
@@ -135,12 +220,49 @@ const RemoveForm = ({ localProducts, setLocalProducts, productType, setProductTy
                             </label>
                             <input
                                 id="quantity"
-                                type="text"
+                                type="number"
                                 value={productDetails?.quantity || ''}
-                                onChange={(event) => updateProductDetails('quantity', event.target.value)}
+                                onChange={(event) => updateProductDetails('quantity', parseFloat(event.target.value))}
                                 className="font-bold bg-white py-1 px-2 rounded-md border-gray-600 my-1 border-2 text-amber-500 w-full"
                             />
                         </div>
+                        {
+                            calculateMethod?.value && (
+                                calculateMethod.value === 'fixed' ?
+                                    <div>
+                                        <label htmlFor="price" className="block font-medium">
+                                            Price
+                                        </label>
+                                        <input
+                                            id="price"
+                                            type="number"
+                                            value={productDetails?.price || ''}
+                                            onChange={(event) => updateProductDetails('price', parseFloat(event.target.value))}
+                                            className="font-bold bg-white py-1 px-2 rounded-md border-gray-600 my-1 border-2 text-amber-500 w-full"
+                                        />
+                                    </div>
+                                    :
+                                    <div className="flex gap-6 items-center">
+                                        <input
+                                            className="font-bold bg-white py-1 px-2 rounded-md border-gray-600 my-1 border-2 text-amber-500 w-40"
+                                            type="number"
+                                            value={calculatePrice.mrp || ''}
+                                            placeholder="Product MRP"
+                                            onChange={(e) => setCalculatePrice(prev => ({ ...prev, mrp: parseFloat(e.target.value) }))}
+                                        />
+                                        <input
+                                            className="font-bold bg-white py-1 px-2 rounded-md border-gray-600 my-1 border-2 text-amber-500 w-20"
+                                            type="number"
+                                            value={calculatePrice.percent || ''}
+                                            placeholder="%"
+                                            onChange={(e) => setCalculatePrice(prev => ({ ...prev, percent: parseFloat(e.target.value) }))}
+
+                                        />
+                                        <p>= {calculatePrice.price}</p>
+                                    </div>
+
+                            )
+                        }
                         {alertMessage.type === 'error' && <Alert message={alertMessage.message} className="bg-red-500" />}
                         {alertMessage.type === 'success' && <Alert message={alertMessage.message} className="bg-green-600" />}
                         <div className="text-center">

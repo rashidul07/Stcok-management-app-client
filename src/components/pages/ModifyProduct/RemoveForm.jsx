@@ -65,6 +65,9 @@ const RemoveForm = ({ localProducts, setLocalProducts, productType, setProductTy
 
         if (calculateMethod?.value) {
             setProductDetails(prev => ({ supplier: prev.supplier, quantity: 1 }));
+            if (calculateMethod.value === 'percent') {
+                setCalculatePrice((prev) => ({ mrp: null, percent: prev.percent, price: null }))
+            }
         } else {
             setProductDetails({ quantity: 1 })
         }
@@ -88,8 +91,12 @@ const RemoveForm = ({ localProducts, setLocalProducts, productType, setProductTy
             setModifiedProductList(modifiedData)
             // ai part ta lagbe kina thik sure na pore test kore dekhte hbe
             if (productType.value === 'product') {
+                if (calculateMethod?.value === 'percent') {
+                    setCalculatePrice((prev) => ({ mrp: null, percent: prev.percent, price: null }))
+                } else {
+                    setCalculatePrice({ mrp: null, percent: null, price: 0 })
+                }
                 setProductDetails(prev => ({ supplier: prev.supplier, quantity: 1, }))
-                setCalculatePrice({ mrp: null, percent: null, price: 0 })
             } else {
                 setProductDetails({ quantity: 1 })
                 setCalculateMethod(null)

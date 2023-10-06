@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 const AddedProductList = ({ localProducts, setLocalProducts, productType, totalPrice }) => {
     const { isLoading, setIsLoading, user, setAlertMessage } = UseContext();
     const [supplierWithPrice, setSupplierWithPrice] = useState({})
+    const [totalProductPrice, setTotalProductPrice] = useState(0);
     const handleDelete = (id) => {
         //need window.confirm
         const deletedItem = localProducts.find(product => product._id === id);
@@ -36,6 +37,18 @@ const AddedProductList = ({ localProducts, setLocalProducts, productType, totalP
         });
 
         return supplierPrices;
+    }
+
+    function getTotalPriceFromSupplierPrices(supplierPrices) {
+        let totalPrice = 0;
+
+        for (const supplier in supplierPrices) {
+            if (supplierPrices.hasOwnProperty(supplier)) {
+                totalPrice += supplierPrices[supplier];
+            }
+        }
+
+        return totalPrice;
     }
 
     const handleModify = async () => {
@@ -106,6 +119,10 @@ const AddedProductList = ({ localProducts, setLocalProducts, productType, totalP
         }
     }, [localProducts])
 
+    useEffect(() => {
+        setTotalProductPrice(getTotalPriceFromSupplierPrices(supplierWithPrice))
+    }, [supplierWithPrice])
+
     return (
         (localProducts.length > 0 && !isLoading) && (
             <div className="mt-4">
@@ -140,12 +157,19 @@ const AddedProductList = ({ localProducts, setLocalProducts, productType, totalP
                 </div>
                 {
                     Object.keys(supplierWithPrice)?.length ? (
-                        Object.keys(supplierWithPrice).map((key) => (
-                            <div className="flex justify-center  mt-2">
-                                <p key={key} className="text-black">{key + ' - '}</p>
-                                <p key={key} className="text-black"> {'  ---  ' + supplierWithPrice[key]}</p>
+                        Object.keys(supplierWithPrice).map((key, i) => (
+                            <div className="flex justify-center  mt-2" key={i}>
+                                <p className="text-black">{key + ' - '}</p>
+                                <p className="text-black"> {'  ---  ' + Math.round(supplierWithPrice[key])}</p>
                             </div>
                         ))
+                    ) : ''
+                }
+                {
+                    Object.keys(supplierWithPrice)?.length ? (
+                        <div className="flex justify-center  mt-2">
+                            <p>Total: {Math.round(totalProductPrice)}</p>
+                        </div>
                     ) : ''
                 }
             </div>

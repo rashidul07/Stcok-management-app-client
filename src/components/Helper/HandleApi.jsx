@@ -9,6 +9,7 @@ const API = {
     getStockHistory: `${import.meta.env.VITE_SERVER_URL}/getStockHistory`,
     getProductsLength: `${import.meta.env.VITE_SERVER_URL}/getProductsLength`,
     modifyProduct: `${import.meta.env.VITE_SERVER_URL}/modifyProducts`,
+    allUsers: `${import.meta.env.VITE_SERVER_URL}/allUsers`,
 }
 
 export default async function fetchData(url, method, body = {}, params = {}) {

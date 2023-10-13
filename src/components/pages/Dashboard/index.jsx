@@ -5,11 +5,14 @@ import UseContext from "../../contexts/UseContext";
 import Table from "./Table";
 import { Indicator } from "../../Libs/Indicator";
 import ChartComponent from "./Chart";
+import Select from "react-select";
+import fetchData from "../../Helper/HandleApi";
 const Dashboard = () => {
     const [chartData, setChartData] = useState({});
     let [totalPage, setTotalPage] = useState(null);
     const [page, setPage] = useState(1);
-
+    const [users, setUsers] = useState([]);
+    const [currentUser, setCurrentUser] = useState();
     const {
         getHistory,
         isLoading,
@@ -22,7 +25,25 @@ const Dashboard = () => {
         setProductType
     } = UseContext();
 
+    useEffect(() => {
+        if (user.email) {
+            setCurrentUser({
+                email: user.email,
+            })
+        }
+    }, [user]);
+
     const OPERATION_TYPES = ['insert', 'update', 'delete'];
+
+    const handleChangeUser = (user) => {
+        setCurrentUser({
+            email: user.value,
+        })
+        setPage(1);
+        getHistory({
+            email: user.value,
+        }, 100, productType, 1, false, true);
+    }
 
     function getDailyOperationCounts(latestHistory) {
         const operationCounts = {};
@@ -85,9 +106,29 @@ const Dashboard = () => {
     }, [shortHistory, stockHistory]);
 
     const handleMoreHistory = () => {
-        getHistory(user, 100, productType, page + 1, true);
+        getHistory(currentUser, 100, productType, page + 1, true);
         setPage(page + 1);
     }
+
+    useEffect(() => {
+        (async () => {
+            const users = await fetchData('allUsers', 'GET');
+            if (users.status === 'success' && users.data?.length) {
+                const options = users.data.map(user => {
+                    return {
+                        value: user,
+                        //get label from email with split @ and get first part and capitalize it
+                        label: user.split('@')[0].charAt(0).toUpperCase() + user.split('@')[0].slice(1)
+                    }
+                })
+                options.push({
+                    value: 'all',
+                    label: 'All Users'
+                })
+                setUsers(options);
+            }
+        })()
+    }, []);
 
     return (
         <div className="p-12 md:m-auto md:border-2 max-sm:w-screen">
@@ -98,6 +139,17 @@ const Dashboard = () => {
                 <span className="label-text text-black">{productType === 'short' ? "Short History" : "Stock History"}</span>
                 <input type="checkbox" className="toggle toggle-info" onChange={handleProductType} checked={productType === 'short' ? true : false} />
             </label>
+            {
+                user.email === 'rashed@rmc.com' ? <div>
+                    <Select
+                        id="user"
+                        value={currentUser?.email ? { value: currentUser.email, label: currentUser.email.split('@')[0].charAt(0).toUpperCase() + currentUser.email.split('@')[0].slice(1) } : null}
+                        onChange={(value) => handleChangeUser(value)}
+                        className="font-bold bg-white py-1 px-2 rounded-md border-gray-600 my-1 border-2 text-amber-500 w-full"
+                        options={users}
+                    />
+                </div > : ''
+            }
             {
                 Object.keys(chartData).length ? <button disabled={totalPage === page} onClick={totalPage === page ? null : handleMoreHistory} className="btn btn-primary w-full">More History [{page}/{totalPage}]</button>
                     : ''

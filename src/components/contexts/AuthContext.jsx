@@ -104,18 +104,26 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  const getHistory = async (user, count, type, page, marge) => {
-    if (type === 'short' && shortHistory.length && !marge) return;
-    if (type === 'stock' && stockHistory.length && !marge) return
+  const getHistory = async (user, count, type, page, marge, isUserChange = false) => {
+    if (type === 'short' && shortHistory.length && !marge && !isUserChange) return;
+    if (type === 'stock' && stockHistory.length && !marge && !isUserChange) return
     if (user.email) {
       setIsLoading(true)
       const response = await fetchData('getHistory', 'GET', {}, { email: user.email, count, type, page })
       if (response.status === 'success') {
         if (type === 'stock') {
-          setStockHistory([...response.data.historyData, ...stockHistory])
+          if (isUserChange) {
+            setStockHistory([...response.data.historyData])
+          } else {
+            setStockHistory([...response.data.historyData, ...stockHistory])
+          }
           setStockHistoryLength(response.data.historyCount)
         } else {
-          setShortHistory([...response.data.historyData, ...shortHistory])
+          if (isUserChange) {
+            setShortHistory([...response.data.historyData])
+          } else {
+            setShortHistory([...response.data.historyData, ...shortHistory])
+          }
           setShortHistoryLength(response.data.historyCount)
         }
       }

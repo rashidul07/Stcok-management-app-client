@@ -135,7 +135,7 @@ const AddedProductList = ({ localProducts, setLocalProducts, productType, totalP
                                 productType?.value === 'product' && (
                                     <>
                                         <p className="text-amber-500 font-semibold mr-4 w-20">{product?.supplier || ''}</p>
-                                        <p className="text-amber-500 font-semibold mr-6 w-6">{product?.price || ''}</p>
+                                        <p className="text-amber-500 font-semibold mr-6 w-6">{Math.round(parseFloat(product?.price)) || ''}</p>
                                     </>
                                 )
                             }

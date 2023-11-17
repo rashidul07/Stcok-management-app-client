@@ -87,6 +87,9 @@ const Navbar = () => {
                                     <li className="text-gray-600 hover:text-blue-600">
                                         <Link to="print">Print</Link>
                                     </li>
+                                    <li className="text-gray-600 hover:text-blue-600">
+                                        <Link to="market">Market</Link>
+                                    </li>
                                     <li className="text-gray-600 hover:text-blue-600" onClick={handleLogOut}>
                                         <Link href="/">Logout</Link>
                                     </li>
@@ -95,6 +98,9 @@ const Navbar = () => {
                                 <ul className="items-center font-medium justify-center space-y-4 md:flex md:space-x-6 md:space-y-0">
                                     <li className="text-gray-600 hover:text-blue-600">
                                         <Link to="print">Print</Link>
+                                    </li>
+                                    <li className="text-gray-600 hover:text-blue-600">
+                                        <Link to="market">Market</Link>
                                     </li>
                                     <li className="text-gray-600 hover:text-blue-600" onClick={() => setNavbar(false)}>
                                         <Link to="login">Login</Link>

@@ -46,7 +46,7 @@ const EditableField = ({ product, localProducts, setLocalProducts, storageName }
                     setLocalProducts(updatedProducts);
                 }}
                 options={storeData.companyList.slice(1)}
-                className="bg-white text-sm rounded-md border-gray-600 border-0 w-1/4 mx-1"
+                className="bg-white text-sm rounded-md border-gray-600 border-0 w-1/5 mx-1"
             />
             {
                 product.price && (
@@ -104,17 +104,42 @@ const EditableField = ({ product, localProducts, setLocalProducts, storageName }
             }
             {
                 !product.price && (
-                    <input
-                        type="number"
-                        value={product.quantity || ''}
-                        onChange={(e) => {
-                            const updatedProduct = { ...product, quantity: e.target.value };
-                            const updatedProducts = localProducts.map(p => p.rId === product.rId ? updatedProduct : p);
-                            localStorage.setItem(storageName, JSON.stringify(updatedProducts));
-                            setLocalProducts(updatedProducts);
-                        }}
-                        className={`bg-white text-sm px-2 rounded-md border-gray-600 border-0 text-center ${product.price ? 'w-6' : 'w-10'}`}
-                    />
+                    <>
+                        <input
+                            type="number"
+                            value={product.quantity || ''}
+                            onChange={(e) => {
+                                const updatedProduct = { ...product, quantity: e.target.value };
+                                const updatedProducts = localProducts.map(p => p.rId === product.rId ? updatedProduct : p);
+                                localStorage.setItem(storageName, JSON.stringify(updatedProducts));
+                                setLocalProducts(updatedProducts);
+                            }}
+                            className={`bg-white text-sm px-2 rounded-md border-gray-600 border-0 text-center ${product.price ? 'w-6' : 'w-10'}`}
+                        />
+                        <input
+                            type="text"
+                            value={product.stock || ""}
+                            onChange={(e) => {
+                                const updatedProduct = { ...product, stock: e.target.value };
+                                const updatedProducts = localProducts.map(p => p.rId === product.rId ? updatedProduct : p);
+                                localStorage.setItem(storageName, JSON.stringify(updatedProducts));
+                                setLocalProducts(updatedProducts);
+                            }}
+                            className={`bg-white text-sm px-2 rounded-md border-gray-600 border-0 text-center ${product.price ? 'w-6' : 'w-10'}`}
+                        />
+
+                        <input
+                            type="checkbox"
+                            checked={product.market}
+                            onChange={(e) => {
+                                const updatedProduct = { ...product, market: e.target.checked };
+                                const updatedProducts = localProducts.map(p => p.rId === product.rId ? updatedProduct : p);
+                                localStorage.setItem(storageName, JSON.stringify(updatedProducts));
+                                setLocalProducts(updatedProducts);
+                            }}
+                            style={product.market === false ? { border: '1px solid #ccc' } : {}}
+                            className="bg-white text-sm px-2 rounded-md border-gray-600 border-1 text-center checkbox checkbox-primary w-6" />
+                    </>
                 )
             }
         </>

@@ -13,6 +13,13 @@ const productInfo = ({ product }) => {
                 )
             }
             <p className={`text-sm text-black text-center ${product.price ? 'w-6' : 'w-10'}`}>{product.quantity}</p>
+            <p className={`text-sm text-black text-center ${product.price ? 'w-6' : 'w-10'}`}>{product?.stock || 0}</p>
+            <input
+                type="checkbox"
+                readOnly
+                checked={product.market}
+                style={product.market === false ? { border: '1px solid #ccc' } : {}}
+                className="bg-white text-sm px-2 rounded-md border-gray-600 border-0 text-center checkbox checkbox-primary" />
         </>
     )
 }

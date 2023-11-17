@@ -32,7 +32,7 @@ const ProductAddForm = () => {
     }, [productType, stockProduct, shortProduct]);
 
     useEffect(() => {
-        setProductDetails(productType === 'stock' ? { quantity: 1, quantityHome: 0, invoiceDiscount: 14.20, extraDiscount: 0 } : { quantity: 1 });
+        setProductDetails(productType === 'stock' ? { quantity: 1, quantityHome: 0, invoiceDiscount: 14.20, extraDiscount: 0 } : { quantity: 1, market: true });
     }, [productType]);
 
     // if product details change then alert message will be empty

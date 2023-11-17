@@ -63,6 +63,10 @@ const router = createBrowserRouter([
         element: <Print />,
       },
       {
+        path: '/market',
+        element: <Print isMarket={true} />,
+      },
+      {
         path: '*',
         element: <ErrorPage />,
       },

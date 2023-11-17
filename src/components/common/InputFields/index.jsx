@@ -64,6 +64,31 @@ const InputFields = ({ modifiedProductList, productDetails, options, productType
                 />
             </div>
             {
+                productType !== 'stock' && (
+                    <>
+                        <div>
+                            <label htmlFor="stock" className="block font-medium">
+                                Stock
+                            </label>
+                            <input
+                                id="stock"
+                                type="text"
+                                value={productDetails?.stock || ''}
+                                onChange={(event) => updateProductDetails('stock', event.target.value)}
+                                className="font-bold bg-white py-1 px-2 rounded-md border-gray-600 my-1 border-2 text-amber-500 w-full"
+                            />
+                        </div>
+                        <div>
+                            <label className="label cursor-pointer">
+                                <span className="label-text">From Market</span>
+                                <input type="checkbox" checked={productDetails.market !== undefined ? productDetails.market : true} onChange={(e) => updateProductDetails('market', e.target.checked)} className="checkbox checkbox-primary" />
+                            </label>
+                        </div>
+
+                    </>
+                )
+            }
+            {
                 productType === 'stock' && (
                     <>
                         <div>

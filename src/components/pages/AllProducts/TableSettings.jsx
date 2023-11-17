@@ -36,7 +36,7 @@ const TableSettings = {
     shortProductColumns: [
         {
             name: 'Name',
-            selector: row => row.label,
+            selector: row => row.stock ? row.label + ' (' + row.stock + ')' : row.label,
             sortable: true,
             sortFunction: caseInsensitiveSort,
             className: 'table-column name',

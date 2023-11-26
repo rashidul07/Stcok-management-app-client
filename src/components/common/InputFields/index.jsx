@@ -91,14 +91,14 @@ const InputFields = ({ modifiedProductList, productDetails, options, productType
                             />
                         </div>
                         <div>
-                            <label htmlFor="lpr" className="block font-medium">
+                            <label htmlFor="lpp" className="block font-medium">
                                 Last Purchase Price
                             </label>
                             <input
-                                id="lpr"
+                                id="lpp"
                                 type="text"
-                                value={productDetails?.lpr || ''}
-                                onChange={(event) => updateProductDetails('lpr', event.target.value)}
+                                value={productDetails?.lpp || ''}
+                                onChange={(event) => updateProductDetails('lpp', event.target.value)}
                                 className="font-bold bg-white py-1 px-2 rounded-md border-gray-600 my-1 border-2 text-amber-500 w-full"
                             />
                         </div>

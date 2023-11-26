@@ -72,7 +72,8 @@ class AddProductHandler {
             this.setProductDetails({
                 label: '',
                 company: this.productDetails.company,
-                quantity: 1
+                quantity: 1,
+                market: true
             });
         }
     }

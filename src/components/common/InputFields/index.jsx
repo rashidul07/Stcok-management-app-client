@@ -79,6 +79,30 @@ const InputFields = ({ modifiedProductList, productDetails, options, productType
                             />
                         </div>
                         <div>
+                            <label htmlFor="mrp" className="block font-medium">
+                                MRP
+                            </label>
+                            <input
+                                id="mrp"
+                                type="text"
+                                value={productDetails?.mrp || ''}
+                                onChange={(event) => updateProductDetails('mrp', event.target.value)}
+                                className="font-bold bg-white py-1 px-2 rounded-md border-gray-600 my-1 border-2 text-amber-500 w-full"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="lpr" className="block font-medium">
+                                Last Purchase Price
+                            </label>
+                            <input
+                                id="lpr"
+                                type="text"
+                                value={productDetails?.lpr || ''}
+                                onChange={(event) => updateProductDetails('lpr', event.target.value)}
+                                className="font-bold bg-white py-1 px-2 rounded-md border-gray-600 my-1 border-2 text-amber-500 w-full"
+                            />
+                        </div>
+                        <div>
                             <label className="label cursor-pointer">
                                 <span className="label-text">From Market</span>
                                 <input type="checkbox" checked={productDetails.market !== undefined ? productDetails.market : true} onChange={(e) => updateProductDetails('market', e.target.checked)} className="checkbox checkbox-primary" />

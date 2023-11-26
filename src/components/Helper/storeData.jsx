@@ -26,6 +26,7 @@ export const storeData = {
         { value: 'reneta', label: 'Reneta' },
         { value: 'sanofi', label: 'Sanofi' },
         { value: 'sample', label: 'Sample' },
+        { value: 'sandoz', label: 'Sandoz' },
         { value: 'skf', label: 'Skf' },
         { value: 'square', label: 'Square' },
         { value: 'surgical', label: 'Surgical' },

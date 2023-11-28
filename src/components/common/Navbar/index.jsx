@@ -72,6 +72,9 @@ const Navbar = () => {
                                         <Link to="shortProducts" >Products List</Link>
                                     </li>
                                     <li className="text-gray-600 hover:text-blue-600">
+                                        <Link to="marketList" >Market List</Link>
+                                    </li>
+                                    <li className="text-gray-600 hover:text-blue-600">
                                         <Link to="modifyProduct">Modify Product</Link>
                                     </li>
                                     <li className="text-gray-600 hover:text-blue-600">

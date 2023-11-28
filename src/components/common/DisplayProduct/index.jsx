@@ -10,7 +10,8 @@ import Spinner from "../../Libs/Spinner";
 import UseContext from "../../contexts/UseContext";
 import TableSettings from '../../pages/AllProducts/TableSettings';
 
-const DisplayProduct = () => {
+const DisplayProduct = ({ isMarket = false }) => {
+    console.log('DisplayProduct', isMarket);
     const { user, alertMessage, setAlertMessage, isLoading, productType, setProductType, stockProduct, shortProduct, setShortProduct, setStockProduct, setIsLoading } = UseContext()
     const [mode, setMode] = useState('Delete Mode');
     const [selectedCompany, setSelectedCompany] = useState(null)
@@ -89,6 +90,7 @@ const DisplayProduct = () => {
         }
     }, [products])
 
+    console.log(selectedProducts)
     useEffect(() => { handleCompanyChange() }, [selectedCompany])
 
     useEffect(() => { if (toggledClearRows === true) setToggleClearRows(false) }, [toggledClearRows])
@@ -152,7 +154,7 @@ const DisplayProduct = () => {
                         selectableRowsHighlight
                         onSelectedRowsChange={handleSelection}
                         clearSelectedRows={toggledClearRows}
-                        conditionalRowStyles={TableSettings.conditionalRowStyles}
+                        conditionalRowStyles={isMarket ? TableSettings.conditionalRowStyles2 : TableSettings.conditionalRowStyles}
                         onRowClicked={handleRowClicked}
                     />
                     {alertMessage.type === 'error' && <Alert message={alertMessage.message} className="bg-red-500" />}
@@ -166,7 +168,7 @@ const DisplayProduct = () => {
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 6H5a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-4M16 2H9a2 2 0 00-2 2v12a2 2 0 002 2h7m5-5H9a2 2 0 00-2 2m2-2h2m-2 2h2m-2 2h2m5-5a2 2 0 01-2 2m-2-2h2m-2 2h2" />
                                 </svg>
                             </button>
-                            <button className={`btn w-full btn-primary outline ${isTableLoading ? "loading" : ""}`} onClick={mode === 'Update Mode' ? handleUpdate : handleSelectedProductDelete}>{mode === 'Update Mode' ? 'Update Status' : 'Delete Products'}</button>
+                            <button className={`btn w-full btn-primary outline ${isTableLoading ? "loading" : ""}`} onClick={mode === 'Update Mode' ? () => handleUpdate(isMarket) : handleSelectedProductDelete}>{mode === 'Update Mode' ? 'Update Status' : 'Delete Products'}</button>
                         </div>
                     }
                     <ProductEditModal product={editableRowData} isTableLoading={isTableLoading} />

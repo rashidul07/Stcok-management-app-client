@@ -42,14 +42,24 @@ const TableSettings = {
             className: 'table-column name',
         },
         {
-            name: 'Company',
-            selector: row => row.company,
-            className: 'table-column company',
-        },
-        {
             name: 'Q',
             selector: row => row.quantity,
             className: 'table-column quantity',
+        },
+        {
+            name: 'MRP',
+            selector: row => row.mrp || 0,
+            className: 'table-column',
+        },
+        {
+            name: 'LPP',
+            selector: row => row.lpp || 0,
+            className: 'table-column',
+        },
+        {
+            name: 'Company',
+            selector: row => row.company,
+            className: 'table-column company',
         }
     ],
     stockProductColumns: [
@@ -111,6 +121,15 @@ const TableSettings = {
             when: row => row?.status === 'complete',
             style: {
                 backgroundColor: '#ABC4AA',
+                color: 'white',
+            },
+        },
+    ],
+    conditionalRowStyles2: [
+        {
+            when: row => row?.market === true,
+            style: {
+                backgroundColor: 'rgb(112,128,144)',
                 color: 'white',
             },
         },

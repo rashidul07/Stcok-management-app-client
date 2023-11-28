@@ -76,16 +76,19 @@ class ProductHandler {
         this.setAlertMessage({ message: 'Copied to clipboard', type: 'success' })
     }
 
-    handleUpdate = async () => {
+    handleUpdate = async (isMarket) => {
         this.setIsTableLoading(true);
         if (window.confirm('Want to update the status')) {
+            const updateProperty = isMarket ? 'market' : 'status';
+
             const list = this.selectedProducts.map(product => {
                 return {
                     _id: product._id,
-                    status: product.status === 'complete' ? 'pending' : 'complete'
+                    [updateProperty]: isMarket ? !product.market : (product.status === 'complete' ? 'pending' : 'complete')
                 }
-            })
-            const response = await fetchData('addProduct', 'POST', { productsCollection: list }, { type: this.type === 'short' ? 'product' : 'stock', user: this.user.email })
+            });
+
+            const response = await fetchData('addProduct', 'POST', { productsCollection: list }, { type: this.type === 'short' ? 'product' : 'stock', user: this.user.email });
 
             if (response.status === 'success') {
                 const historyData = this.selectedProducts.map(pd => {
@@ -97,57 +100,127 @@ class ProductHandler {
                         operation: 'update',
                         rId: pd.rId,
                         productData: {
-                            status: [pd.status, pd.status === 'complete' ? 'pending' : 'complete'],
+                            [updateProperty]: isMarket ? !pd.market : [pd.status, pd.status === 'complete' ? 'pending' : 'complete']
                         }
-                    }
-                })
-                if (this.type === 'short') {
-                    fetchData('addHistory', 'POST', historyData)
-                } else if (this.type === 'stock') {
-                    fetchData('addStockHistory', 'POST', historyData)
-                }
-                this.setSelectedProducts([])
-                this.setTextareaValue(null)
-                this.setToggleClearRows(true)
-                this.setAlertMessage({ message: `${response.data.modifiedCount} Status updated successfully`, type: 'success' })
-                //change the status of the products as same as selected products
+                    };
+                });
+
+                const historyEndpoint = this.type === 'short' ? 'addHistory' : 'addStockHistory';
+                fetchData(historyEndpoint, 'POST', historyData);
+
+                this.setSelectedProducts([]);
+                this.setTextareaValue(null);
+                this.setToggleClearRows(true);
+                this.setAlertMessage({ message: `${response.data.modifiedCount} Status updated successfully`, type: 'success' });
+
+                // Update products based on selected products
                 const updatedProductList = this.productList.map(product => {
-                    const selectedProduct = this.selectedProducts.find(selectedProduct => selectedProduct._id === product._id)
+                    const selectedProduct = this.selectedProducts.find(selectedProduct => selectedProduct._id === product._id);
                     if (selectedProduct) {
                         return {
                             ...product,
-                            status: selectedProduct.status === 'complete' ? 'pending' : 'complete'
-                        }
+                            [updateProperty]: isMarket ? !selectedProduct.market : (selectedProduct.status === 'complete' ? 'pending' : 'complete')
+                        };
                     }
-                    return product
-                })
+                    return product;
+                });
 
                 const updatedProducts = this.products.map(product => {
-                    const selectedProduct = this.selectedProducts.find(selectedProduct => selectedProduct._id === product._id)
+                    const selectedProduct = this.selectedProducts.find(selectedProduct => selectedProduct._id === product._id);
                     if (selectedProduct) {
                         return {
                             ...product,
-                            status: selectedProduct.status === 'complete' ? 'pending' : 'complete'
-                        }
+                            [updateProperty]: isMarket ? !selectedProduct.market : (selectedProduct.status === 'complete' ? 'pending' : 'complete')
+                        };
                     }
-                    return product
-                })
+                    return product;
+                });
 
-                this.setProducts(updatedProducts)
-                this.setProductList(updatedProductList)
-                this.setSelectedCompany(this.selectedCompany)
-            }
-            else {
-                this.setAlertMessage({ message: response.message, type: 'error' })
+                this.setProducts(updatedProducts);
+                this.setProductList(updatedProductList);
+                this.setSelectedCompany(this.selectedCompany);
+            } else {
+                this.setAlertMessage({ message: response.message, type: 'error' });
             }
         }
         this.setIsTableLoading(false);
-    }
+    };
+
+
+    // handleUpdate = async (isMarket) => {
+    //     this.setIsTableLoading(true);
+    //     if (window.confirm('Want to update the status')) {
+    //         const list = this.selectedProducts.map(product => {
+    //             return {
+    //                 _id: product._id,
+    //                 status: product.status === 'complete' ? 'pending' : 'complete'
+    //             }
+    //         })
+    //         const response = await fetchData('addProduct', 'POST', { productsCollection: list }, { type: this.type === 'short' ? 'product' : 'stock', user: this.user.email })
+
+    //         if (response.status === 'success') {
+    //             const historyData = this.selectedProducts.map(pd => {
+    //                 return {
+    //                     productId: pd._id,
+    //                     label: pd.label,
+    //                     date: new Date().toISOString(),
+    //                     user: this.user.email,
+    //                     operation: 'update',
+    //                     rId: pd.rId,
+    //                     productData: {
+    //                         status: [pd.status, pd.status === 'complete' ? 'pending' : 'complete'],
+    //                     }
+    //                 }
+    //             })
+    //             if (this.type === 'short') {
+    //                 fetchData('addHistory', 'POST', historyData)
+    //             } else if (this.type === 'stock') {
+    //                 fetchData('addStockHistory', 'POST', historyData)
+    //             }
+    //             this.setSelectedProducts([])
+    //             this.setTextareaValue(null)
+    //             this.setToggleClearRows(true)
+    //             this.setAlertMessage({ message: `${response.data.modifiedCount} Status updated successfully`, type: 'success' })
+    //             //change the status of the products as same as selected products
+    //             const updatedProductList = this.productList.map(product => {
+    //                 const selectedProduct = this.selectedProducts.find(selectedProduct => selectedProduct._id === product._id)
+    //                 if (selectedProduct) {
+    //                     return {
+    //                         ...product,
+    //                         status: selectedProduct.status === 'complete' ? 'pending' : 'complete'
+    //                     }
+    //                 }
+    //                 return product
+    //             })
+
+    //             const updatedProducts = this.products.map(product => {
+    //                 const selectedProduct = this.selectedProducts.find(selectedProduct => selectedProduct._id === product._id)
+    //                 if (selectedProduct) {
+    //                     return {
+    //                         ...product,
+    //                         status: selectedProduct.status === 'complete' ? 'pending' : 'complete'
+    //                     }
+    //                 }
+    //                 return product
+    //             })
+
+    //             this.setProducts(updatedProducts)
+    //             this.setProductList(updatedProductList)
+    //             this.setSelectedCompany(this.selectedCompany)
+    //         }
+    //         else {
+    //             this.setAlertMessage({ message: response.message, type: 'error' })
+    //         }
+    //     }
+    //     this.setIsTableLoading(false);
+    // }
+
     handleSetCompany = (company) => {
         this.setSelectedCompany(company)
     }
 
     handleRowClicked = (row) => {
+        console.log(row)
         this.setEditableRowData(row);
         //there is a cheekbox wiich id is "my-modal" in the table. I want to click it when a row is clicked. do it react way
         const modal = document.getElementById("my-modal");

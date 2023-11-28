@@ -3,6 +3,8 @@ import { updateProductPrice } from '../../Helper/AddProductHandler';
 import { handleSetEditableRowData } from '../../Helper/AllProductsHandler';
 import { storeData } from "../../Helper/storeData";
 export default function ModalField({ product }) {
+    console.log("modal", product)
+    const isMarket = window.location.pathname === '/marketList'
     const customStyles = {
         control: (base, state) => ({
             ...base,
@@ -47,15 +49,42 @@ export default function ModalField({ product }) {
                 />
                 {
                     product.totalPrice === undefined && (
-                        <input
-                            type="number"
-                            value={product.quantity || ""}
-                            onChange={(e) => {
-                                const updatedProduct = { ...product, quantity: e.target.value };
-                                handleSetEditableRowData(updatedProduct);
-                            }}
-                            className={`bg-white text-sm px-2 rounded-md border-gray-600 border-0 text-center w-10 h-8`}
-                        />
+                        <>
+                            <input
+                                type="number"
+                                value={product.quantity || ""}
+                                onChange={(e) => {
+                                    const updatedProduct = { ...product, quantity: e.target.value };
+                                    handleSetEditableRowData(updatedProduct);
+                                }}
+                                className={`bg-white text-sm px-2 rounded-md border-gray-600 border-0 text-center w-10 h-8`}
+                            />
+                            {
+                                isMarket ?
+                                    <div>
+                                        <input
+                                            type="text"
+                                            value={product.mrp || ""}
+                                            placeholder='mrp'
+                                            onChange={(e) => {
+                                                const updatedProduct = { ...product, mrp: e.target.value };
+                                                handleSetEditableRowData(updatedProduct);
+                                            }}
+                                            className={`bg-white text-sm px-2 rounded-md border-gray-600 border-0 text-center mx-1 w-10 h-8`}
+                                        />
+                                        <input
+                                            type="text"
+                                            value={product.lpp || ''}
+                                            placeholder='lpp'
+                                            onChange={(e) => {
+                                                const updatedProduct = { ...product, lpp: e.target.value };
+                                                handleSetEditableRowData(updatedProduct);
+                                            }}
+                                            className={`bg-white text-sm px-2 rounded-md border-gray-600 border-0 text-center mx-1 my-1 w-10 h-8`}
+                                        />
+                                    </div> : ''
+                            }
+                        </>
                     )
                 }
                 {

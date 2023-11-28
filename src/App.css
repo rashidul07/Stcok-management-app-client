@@ -49,16 +49,24 @@
 }
 
 .shortListTable .rdt_Table .rdt_TableHead .rdt_TableHeadRow > div:nth-child(3) {
-  width: 45%;
+  width: 35%;
   min-width: unset;
 }
 
 .shortListTable .rdt_Table .rdt_TableHead .rdt_TableHeadRow > div:nth-child(4) {
-  width: 25%;
+  width: 10%;
   min-width: unset;
 }
 .shortListTable .rdt_Table .rdt_TableHead .rdt_TableHeadRow > div:nth-child(5) {
   width: 10%;
+  min-width: unset;
+}
+.shortListTable .rdt_Table .rdt_TableHead .rdt_TableHeadRow > div:nth-child(6) {
+  width: 10%;
+  min-width: unset;
+}
+.shortListTable .rdt_Table .rdt_TableHead .rdt_TableHeadRow > div:nth-child(7) {
+  width: 17%;
   min-width: unset;
 }
 
@@ -74,16 +82,24 @@
 }
 
 .shortListTable .rdt_Table .rdt_TableBody .rdt_TableRow > div:nth-child(3) {
-  width: 45%;
+  width: 35%;
   min-width: unset;
 }
 
 .shortListTable .rdt_Table .rdt_TableBody .rdt_TableRow > div:nth-child(4) {
-  width: 25%;
+  width: 10%;
   min-width: unset;
 }
 .shortListTable .rdt_Table .rdt_TableBody .rdt_TableRow > div:nth-child(5) {
   width: 10%;
+  min-width: unset;
+}
+.shortListTable .rdt_Table .rdt_TableBody .rdt_TableRow > div:nth-child(6) {
+  width: 10%;
+  min-width: unset;
+}
+.shortListTable .rdt_Table .rdt_TableBody .rdt_TableRow > div:nth-child(7) {
+  width: 17%;
   min-width: unset;
 }
 

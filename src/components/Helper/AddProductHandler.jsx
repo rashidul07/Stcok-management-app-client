@@ -207,8 +207,9 @@ class AddProductHandler {
             productList =
                 [...this.localProducts,
                 {
-                    rId: id, ...this.productDetails,
+                    rId: id,
                     id: id,
+                    ...this.productDetails,
                     label: this.productDetails.label.trim(),
                     company: this.productDetails.company.value,
                     time: new Date().toISOString(),

@@ -58,7 +58,8 @@ const AddedProductList = ({ localProducts, setLocalProducts, productType, totalP
             finalData = localProducts.map(product => {
                 return {
                     _id: product._id,
-                    quantity: product.oldQuantity - product.quantity
+                    quantity: product.oldQuantity - product.quantity,
+                    lpp: product.price
                 }
             });
         } else {

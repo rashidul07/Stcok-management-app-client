@@ -1,6 +1,21 @@
 import { useEffect, useState } from "react";
 import fetchData from "../../Helper/HandleApi";
 import Spinner from "../../Libs/Spinner";
+
+function generateCodeFromNumber(price) {
+    if (!price) return '';
+    const alphabet = 'ABCDEFGHIJ';
+    const priceString = price.toString();
+    let code = '';
+
+    for (let i = 0; i < priceString.length; i++) {
+        const digit = parseInt(priceString[i]);
+        code += alphabet[digit];
+    }
+
+    return code;
+}
+
 const Print = ({ isMarket }) => {
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(false)
@@ -19,13 +34,13 @@ const Print = ({ isMarket }) => {
         const productsData = []
         Object.entries(companyMap).map((key) => {
             productsData.push({ type: 'title', label: key[0] })
-            for (const { label, quantity, name, status, market } of key[1].product) {
+            for (const { label, quantity, name, status, market, lpp } of key[1].product) {
                 if (isMarket) {
                     if (market) {
-                        productsData.push({ type: 'product', label: label ? label : name, quantity, status })
+                        productsData.push({ type: 'product', label: label ? label : name, quantity, status, lpp: generateCodeFromNumber(Number(lpp) || 0) })
                     }
                 } else {
-                    productsData.push({ type: 'product', label: label ? label : name, quantity, status })
+                    productsData.push({ type: 'product', label: label ? label : name, quantity, status, lpp: generateCodeFromNumber(Number(lpp) || 0) })
                 }
             }
         })
@@ -48,8 +63,8 @@ const Print = ({ isMarket }) => {
                 </div> :
                     <div style={{ margin: "0 10px" }}>
                         {
-                            data.map(({ type, label, quantity, status, market }, i) => {
-                                return type === "title" ? <span key={i} >{i ? <br /> : ''}<p className={`print-product-item title`}><span>{label}</span> </p></span> : <span key={i} className="print-product-item info"><span className={status === 'complete' ? 'line-through' : ''}>{label} -- {quantity}</span></span>
+                            data.map(({ type, label, quantity, status, market, lpp }, i) => {
+                                return type === "title" ? <span key={i} >{i ? <br /> : ''}<p className={`print-product-item title`}><span>{label}</span> </p></span> : <span key={i} className="print-product-item info"><span className={status === 'complete' ? 'line-through' : ''}>{label} -- {quantity} {lpp ? ('--' + lpp) : ''}</span></span>
                             })
                         }
                         <span className="print-product-item info"><span>Total: {lengthOfData}</span></span>

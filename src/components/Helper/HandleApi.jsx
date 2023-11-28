@@ -10,6 +10,7 @@ const API = {
     getProductsLength: `${import.meta.env.VITE_SERVER_URL}/getProductsLength`,
     modifyProduct: `${import.meta.env.VITE_SERVER_URL}/modifyProducts`,
     allUsers: `${import.meta.env.VITE_SERVER_URL}/allUsers`,
+    dbProducts: `${import.meta.env.VITE_SERVER_URL}/getDbProducts`,
 }
 
 export default async function fetchData(url, method, body = {}, params = {}) {

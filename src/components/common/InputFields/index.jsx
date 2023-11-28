@@ -4,16 +4,58 @@ import { handleAddToListClick, handleClear, handleOnFill, updateProductDetails }
 import { storeData } from "../../Helper/storeData";
 import Alert from "../../Libs/Alert";
 import UseContext from '../../contexts/UseContext';
+import { useEffect, useState } from 'react';
+import fetchData from '../../Helper/HandleApi';
+
+function removeDuplicates(data) {
+    let uniqueNames = {};
+
+    let uniqueData = data.filter(item => {
+        if (!uniqueNames[item?.name?.toLowerCase()?.trim()]) {
+            uniqueNames[item?.name?.toLowerCase()?.trim()] = true;
+            return true;
+        }
+        return false;
+    });
+    return uniqueData;
+}
 
 const InputFields = ({ modifiedProductList, productDetails, options, productType }) => {
     const { alertMessage } = UseContext();
+    const [dbLoading, setDbLoading] = useState(false);
+    const [dbProducts, setDbProducts] = useState([]);
+
+    useEffect(() => {
+        (async () => {
+            setDbLoading(true);
+            const response = await fetchData('dbProducts', 'GET', {}, {});
+            if (response.status === 'success') {
+                const withId = response.data.map(item => {
+                    //remove _id from the object and add id to the object with the value of _id
+                    const { _id, ...rest } = item;
+                    return { ...rest, id: _id, dbId: _id };
+                });
+                setDbProducts(withId);
+            }
+            setDbLoading(false);
+        })();
+    }, []);
+
 
     const formatResult = (item) => {
-        return (
-            <>
-                <span style={{ display: 'block', textAlign: 'left' }} className='bg-gray-200'>{item.label + ' (' + item.quantity + ')' + (item.quantityHome ? ' (' + item.quantityHome + ')' : '')}</span>
-            </>
-        )
+        if (item.quantity) {
+            return (
+                <>
+                    <span style={{ display: 'block', textAlign: 'left' }} className='bg-gray-200'>{item.label + ' (' + item.quantity + ')' + (item.quantityHome ? ' (' + item.quantityHome + ')' : '')}</span>
+                </>
+            )
+        } else {
+            return (
+                <>
+                    <span style={{ display: 'block', textAlign: 'left' }} className='bg-green-200'>{item.label}</span>
+                </>
+            )
+        }
     }
 
     return (
@@ -25,7 +67,7 @@ const InputFields = ({ modifiedProductList, productDetails, options, productType
                 <div className='productNameContainer'>
                     <div>
                         <ReactSearchAutocomplete
-                            items={modifiedProductList}
+                            items={removeDuplicates([...modifiedProductList, ...dbProducts])}
                             onSearch={(string) => {
                                 updateProductDetails('label', string)
                             }}

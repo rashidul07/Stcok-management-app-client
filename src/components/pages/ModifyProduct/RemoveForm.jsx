@@ -122,7 +122,7 @@ const RemoveForm = ({ localProducts, setLocalProducts, productType, setProductTy
                     quantity: 1,
                     rId: value.rId,
                     supplier: prev.supplier,
-                    price: prev.price,
+                    price: value.lpp ? value.lpp : prev.price,
                 }
             ));
         } else {

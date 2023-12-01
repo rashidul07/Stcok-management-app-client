@@ -11,7 +11,7 @@ import UseContext from "../../contexts/UseContext";
 import TableSettings from '../../pages/AllProducts/TableSettings';
 
 const DisplayProduct = ({ isMarket = false }) => {
-    console.log('DisplayProduct', isMarket);
+
     const { user, alertMessage, setAlertMessage, isLoading, productType, setProductType, stockProduct, shortProduct, setShortProduct, setStockProduct, setIsLoading } = UseContext()
     const [mode, setMode] = useState('Delete Mode');
     const [selectedCompany, setSelectedCompany] = useState(null)

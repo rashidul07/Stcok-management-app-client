@@ -8,7 +8,7 @@ import UseContext from "../../contexts/UseContext";
 
 const RemoveForm = ({ localProducts, setLocalProducts, productType, setProductType }) => {
     const [modifiedProductList, setModifiedProductList] = useState([]);
-    const [productDetails, setProductDetails] = useState({ quantity: 1 });
+    const [productDetails, setProductDetails] = useState({ quantity: 1, supplier: 1 });
     const { user, alertMessage, setAlertMessage, isLoading, shortProduct, stockProduct } = UseContext();
     const [calculateMethod, setCalculateMethod] = useState(null)
     const [calculatePrice, setCalculatePrice] = useState({ mrp: null, percent: null, price: null })

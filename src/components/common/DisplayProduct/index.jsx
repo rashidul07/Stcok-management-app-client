@@ -90,7 +90,6 @@ const DisplayProduct = ({ isMarket = false }) => {
         }
     }, [products])
 
-    console.log(selectedProducts)
     useEffect(() => { handleCompanyChange() }, [selectedCompany])
 
     useEffect(() => { if (toggledClearRows === true) setToggleClearRows(false) }, [toggledClearRows])

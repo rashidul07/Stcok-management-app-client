@@ -37,10 +37,12 @@ const Print = ({ isMarket }) => {
             for (const { label, quantity, name, status, market, lpp, info } of key[1].product) {
                 if (isMarket) {
                     if (market) {
-                        productsData.push({ type: 'product', label: label ? label : name, quantity, info, status, lpp: generateCodeFromNumber(Number(lpp) || 0) })
+                        productsData.push({ type: 'product', label: label ? label : name, quantity, info, status, lpp })
+                        // productsData.push({ type: 'product', label: label ? label : name, quantity, info, status, lpp: generateCodeFromNumber(Number(lpp) || 0) })
                     }
                 } else {
-                    productsData.push({ type: 'product', label: label ? label : name, quantity, info, status, lpp: generateCodeFromNumber(Number(lpp) || 0) })
+                    // productsData.push({ type: 'product', label: label ? label : name, quantity, info, status, lpp: generateCodeFromNumber(Number(lpp) || 0) })
+                    productsData.push({ type: 'product', label: label ? label : name, quantity, info, status, lpp })
                 }
             }
         })
@@ -64,7 +66,7 @@ const Print = ({ isMarket }) => {
                     <div style={{ margin: "0 10px" }}>
                         {
                             data.map(({ type, label, quantity, status, market, lpp, info }, i) => {
-                                return type === "title" ? <span key={i} >{i ? <br /> : ''}<p className={`print-product-item title`}><span>{label}</span> </p></span> : <span key={i} className="print-product-item info"><span className={status === 'complete' ? 'line-through' : ''}>{label}{info ? ` (${info})` : ''} -- {quantity} {lpp ? ('--' + lpp) : ''}</span></span>
+                                return type === "title" ? <span key={i}>{i ? <><br /> <br /> <hr /></> : ''}<p className={`print-product-item title`}><span>{label}</span> </p></span> : <span key={i} className="print-product-item info"><span className={status === 'complete' ? 'line-through' : ''}>{label}{info ? ` (${info})` : ''} -- {quantity} {lpp ? ('--' + lpp) : ''}</span></span>
                             })
                         }
                         <span className="print-product-item info"><span>Total: {lengthOfData}</span></span>

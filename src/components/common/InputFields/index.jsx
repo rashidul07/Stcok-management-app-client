@@ -21,9 +21,10 @@ function removeDuplicates(data) {
 }
 
 const InputFields = ({ modifiedProductList, productDetails, options, productType }) => {
-    const { alertMessage } = UseContext();
+    const { alertMessage, stockProduct } = UseContext();
     const [dbLoading, setDbLoading] = useState(false);
     const [dbProducts, setDbProducts] = useState([]);
+    const [matchProduct, setMatchProduct] = useState([]);
 
     useEffect(() => {
         (async () => {
@@ -61,6 +62,16 @@ const InputFields = ({ modifiedProductList, productDetails, options, productType
     return (
         <form className="space-y-4 md:w-96">
             <div>
+                {
+                    matchProduct.length > 0 && (
+                        <div className='bg-gray-200 p-2 rounded-md'>
+                            <p className='text-center'>Matched Product</p>
+                            <ul className='list-disc pl-4'>
+                                {matchProduct.slice(0, 5).map((item, index) => <li key={index}>{item}</li>)}
+                            </ul>
+                        </div>
+                    )
+                }
                 <label htmlFor="productName" className="block font-medium">
                     Product Name
                 </label>
@@ -69,6 +80,14 @@ const InputFields = ({ modifiedProductList, productDetails, options, productType
                         <ReactSearchAutocomplete
                             items={removeDuplicates([...modifiedProductList, ...dbProducts])}
                             onSearch={(string) => {
+                                if (string.length > 0) {
+                                    const stockQuantity = stockProduct.filter(item => item.name?.toLowerCase().includes(string?.toLowerCase())).map(item => {
+                                        return item.name + ' (' + item.quantity + ')' + (item.quantityHome ? ' (' + item.quantityHome + ')' : '');
+                                    });
+                                    setMatchProduct(stockQuantity);
+                                } else {
+                                    setMatchProduct([]);
+                                }
                                 updateProductDetails('label', string)
                             }}
                             onSelect={handleOnFill}

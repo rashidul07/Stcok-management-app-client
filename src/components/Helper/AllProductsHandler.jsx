@@ -220,7 +220,6 @@ class ProductHandler {
     }
 
     handleRowClicked = (row) => {
-        console.log(row)
         this.setEditableRowData(row);
         //there is a cheekbox wiich id is "my-modal" in the table. I want to click it when a row is clicked. do it react way
         const modal = document.getElementById("my-modal");

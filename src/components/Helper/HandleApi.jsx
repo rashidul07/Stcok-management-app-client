@@ -11,6 +11,7 @@ const API = {
     modifyProduct: `${import.meta.env.VITE_SERVER_URL}/modifyProducts`,
     allUsers: `${import.meta.env.VITE_SERVER_URL}/allUsers`,
     dbProducts: `${import.meta.env.VITE_SERVER_URL}/getDbProducts`,
+    dummyData: `${import.meta.env.VITE_SERVER_URL}/setDummyData`,
 }
 
 export default async function fetchData(url, method, body = {}, params = {}) {

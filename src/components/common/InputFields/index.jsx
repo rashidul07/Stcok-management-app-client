@@ -21,7 +21,7 @@ function removeDuplicates(data) {
 }
 
 const InputFields = ({ modifiedProductList, productDetails, options, productType }) => {
-    const { alertMessage, stockProduct } = UseContext();
+    const { alertMessage, stockProduct, user } = UseContext();
     const [dbLoading, setDbLoading] = useState(false);
     const [dbProducts, setDbProducts] = useState([]);
     const [matchProduct, setMatchProduct] = useState([]);
@@ -41,6 +41,13 @@ const InputFields = ({ modifiedProductList, productDetails, options, productType
             setDbLoading(false);
         })();
     }, []);
+
+    const addDummyData = async () => {
+        const response = await fetchData('dummyData', 'GET', {}, {});
+        if (response.status === 'success') {
+            console.log(response.data);
+        }
+    }
 
 
     const formatResult = (item) => {
@@ -239,6 +246,13 @@ const InputFields = ({ modifiedProductList, productDetails, options, productType
                     value="Add to List"
                     className="py-2 px-4 w-full border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 />
+            </div>
+            <div className="text-center">
+                {
+                    user.email === 'rashed@rmc.com' && (
+                        <button className='bg-blue-500 text-white p-2 rounded-md' onClick={addDummyData}>Add Dummy Data</button>
+                    )
+                }
             </div>
         </form>
     )

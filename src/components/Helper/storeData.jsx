@@ -55,7 +55,7 @@ export const storeData = {
     productType: [
         { value: '', label: 'Please select a Type' },
         { value: 'product', label: 'Short Product' },
-        { value: 'stock', label: 'Stock Product' },
+        // { value: 'stock', label: 'Stock Product' },
     ]
 
 }

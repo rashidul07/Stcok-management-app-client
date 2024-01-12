@@ -370,6 +370,7 @@ class AddProductHandler {
                 this.setProductList(this.margeArray(modifiedLocalProducts, this.productList));
                 localStorage.removeItem(this.type === "short" ? 'productList' : 'stockList');
                 this.setLocalProducts([]);
+                window.location.reload();
             }
             else {
                 this.setAlertMessage({ message: response.message, type: 'error' });

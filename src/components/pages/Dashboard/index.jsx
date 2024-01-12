@@ -135,12 +135,12 @@ const Dashboard = () => {
             <h1 className="text-2xl font-bold mb-4 text-center text-black">
                 {productType === 'short' ? 'Short' : "Stock"} History <Indicator item={productType === 'short' ? shortHistoryLength : stockHistoryLength} />
             </h1>
-            <label className="cursor-pointer label justify-center gap-2 bg-cyan-200 mb-4">
+            {/* <label className="cursor-pointer label justify-center gap-2 bg-cyan-200 mb-4">
                 <span className="label-text text-black">{productType === 'short' ? "Short History" : "Stock History"}</span>
                 <input type="checkbox" className="toggle toggle-info" onChange={handleProductType} checked={productType === 'short' ? true : false} />
-            </label>
+            </label> */}
             {
-                user.email === 'rashed@rmc.com' ? <div>
+                user.email === 'romel@mrh.com' ? <div>
                     <Select
                         id="user"
                         value={currentUser?.email ? { value: currentUser.email, label: currentUser.email.split('@')[0].charAt(0).toUpperCase() + currentUser.email.split('@')[0].slice(1) } : null}

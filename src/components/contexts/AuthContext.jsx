@@ -46,22 +46,22 @@ export const AuthProvider = ({ children }) => {
     if (response.status === 'error') {
       setError(response);
     }
-    const stockResponse = await fetchData('productList', 'GET', {}, { type: 'stock', user: user.email })
-    if (stockResponse.status === 'success') {
-      const modifiedData = stockResponse.data.map(product => {
-        if (!product.label) {
-          return { ...product, label: product.name, id: product._id }
-        } else if (!product.name) {
-          return { ...product, name: product.label, id: product._id }
-        } else {
-          return { ...product, id: product._id };
-        }
-      })
-      setStockProduct(modifiedData)
-    }
-    if (stockResponse.status === 'error') {
-      setError(stockResponse);
-    }
+    // const stockResponse = await fetchData('productList', 'GET', {}, { type: 'stock', user: user.email })
+    // if (stockResponse.status === 'success') {
+    //   const modifiedData = stockResponse.data.map(product => {
+    //     if (!product.label) {
+    //       return { ...product, label: product.name, id: product._id }
+    //     } else if (!product.name) {
+    //       return { ...product, name: product.label, id: product._id }
+    //     } else {
+    //       return { ...product, id: product._id };
+    //     }
+    //   })
+    //   setStockProduct(modifiedData)
+    // }
+    // if (stockResponse.status === 'error') {
+    //   setError(stockResponse);
+    // }
     setIsLoading(false)
   }
 

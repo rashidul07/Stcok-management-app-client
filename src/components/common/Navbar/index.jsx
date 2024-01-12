@@ -16,7 +16,7 @@ const Navbar = () => {
                 <div>
                     <div className="flex items-center justify-between py-3 md:py-5 md:block">
                         <Link to="/" onClick={() => setNavbar(false)}>
-                            <h2 className="text-2xl font-bold text-primary-focus">Rafi Medicine</h2>
+                            <h2 className="text-2xl font-bold text-primary-focus">MRH DRUG HOUSE</h2>
                         </Link>
                         <div className="md:hidden">
                             <button
@@ -68,31 +68,35 @@ const Navbar = () => {
                                     <li className="text-gray-600 hover:text-blue-600">
                                         <Link to="addProduct" >Add Products</Link>
                                     </li>
-                                    <li className="text-gray-600 hover:text-blue-600">
-                                        <Link to="shortProducts" >Products List</Link>
-                                    </li>
-                                    <li className="text-gray-600 hover:text-blue-600">
-                                        <Link to="marketList" >Market List</Link>
-                                    </li>
-                                    <li className="text-gray-600 hover:text-blue-600">
-                                        <Link to="modifyProduct">Modify Product</Link>
-                                    </li>
-                                    <li className="text-gray-600 hover:text-blue-600">
-                                        <Link to="dashboard">Dashboard</Link>
-                                    </li>
                                     {
-                                        user?.email === 'rashed@rmc.com' && (
-                                            <li className="text-gray-600 hover:text-blue-600">
-                                                <Link to="addUser">Add User</Link>
-                                            </li>
+                                        user?.email === 'romel@mrh.com' && (
+                                            <>
+                                                <li className="text-gray-600 hover:text-blue-600">
+                                                    <Link to="shortProducts" >Products List</Link>
+                                                </li>
+                                                {/* <li className="text-gray-600 hover:text-blue-600">
+                                                    <Link to="marketList" >Market List</Link>
+                                                </li> */}
+                                                <li className="text-gray-600 hover:text-blue-600">
+                                                    <Link to="modifyProduct">Modify Product</Link>
+                                                </li>
+                                                <li className="text-gray-600 hover:text-blue-600">
+                                                    <Link to="dashboard">Dashboard</Link>
+                                                </li>
+                                                <li className="text-gray-600 hover:text-blue-600">
+                                                    <Link to="addUser">Add User</Link>
+                                                </li>
+                                            </>
+
+
                                         )
                                     }
                                     <li className="text-gray-600 hover:text-blue-600">
                                         <Link to="print">Print</Link>
                                     </li>
-                                    <li className="text-gray-600 hover:text-blue-600">
+                                    {/* <li className="text-gray-600 hover:text-blue-600">
                                         <Link to="market">Market</Link>
-                                    </li>
+                                    </li> */}
                                     <li className="text-gray-600 hover:text-blue-600" onClick={handleLogOut}>
                                         <Link href="/">Logout</Link>
                                     </li>
@@ -102,9 +106,9 @@ const Navbar = () => {
                                     <li className="text-gray-600 hover:text-blue-600">
                                         <Link to="print">Print</Link>
                                     </li>
-                                    <li className="text-gray-600 hover:text-blue-600">
+                                    {/* <li className="text-gray-600 hover:text-blue-600">
                                         <Link to="market">Market</Link>
-                                    </li>
+                                    </li> */}
                                     <li className="text-gray-600 hover:text-blue-600" onClick={() => setNavbar(false)}>
                                         <Link to="login">Login</Link>
                                     </li>

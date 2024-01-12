@@ -136,8 +136,8 @@ const DisplayProduct = ({ isMarket = false }) => {
                                 <label className="cursor-pointer label">
                                     <span className="label-text text-black mr-2">{mode}</span>
                                     <input type="checkbox" className="toggle toggle-info mr-2" onChange={handleModeChange} checked={mode === "Update Mode" ? true : false} />
-                                    <span className="label-text text-black mr-2">{productType === 'short' ? "Short Product" : "Stock Product"}</span>
-                                    <input type="checkbox" className="toggle toggle-info" onChange={handleProductType} checked={productType === 'short' ? true : false} />
+                                    {/*<span className="label-text text-black mr-2">{productType === 'short' ? "Short Product" : "Stock Product"}</span>
+                        <input type="checkbox" className="toggle toggle-info" onChange={handleProductType} checked={productType === 'short' ? true : false} />*/}
                                 </label>
                             </div>
                         )

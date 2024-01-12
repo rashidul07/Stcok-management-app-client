@@ -22,7 +22,7 @@ const AddUser = () => {
 
     //redirect if user not admin
     useEffect(() => {
-        if (user.email !== 'rashed@rmc.com') {
+        if (user.email !== 'romel@mrh.com') {
             window.location.pathname = '/';
         }
     }, [user]);

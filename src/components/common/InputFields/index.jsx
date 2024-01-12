@@ -170,12 +170,12 @@ const InputFields = ({ modifiedProductList, productDetails, options, productType
                                 className="font-bold bg-white py-1 px-2 rounded-md border-gray-600 my-1 border-2 text-amber-500 w-full"
                             />
                         </div>
-                        <div>
+                        {/* <div>
                             <label className="label cursor-pointer">
                                 <span className="label-text">From Market</span>
                                 <input type="checkbox" checked={productDetails.market !== undefined ? productDetails.market : true} onChange={(e) => updateProductDetails('market', e.target.checked)} className="checkbox checkbox-primary" />
                             </label>
-                        </div>
+                        </div> */}
 
                     </>
                 )
@@ -247,13 +247,13 @@ const InputFields = ({ modifiedProductList, productDetails, options, productType
                     className="py-2 px-4 w-full border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 />
             </div>
-            <div className="text-center">
+            {/* <div className="text-center">
                 {
                     user.email === 'rashed@rmc.com' && (
                         <button className='bg-blue-500 text-white p-2 rounded-md' onClick={addDummyData}>Add Dummy Data</button>
                     )
                 }
-            </div>
+            </div> */}
         </form>
     )
 }

@@ -26,10 +26,10 @@ const InputFieldsContainer = ({
             <h1 className="text-2xl font-bold mb-4 text-center text-black">
                 {productType === 'short' ? 'Short' : "Stock"} Product <Indicator item={productType === 'stock' ? stockProduct.length : shortProduct.length} />
             </h1>
-            <label className="cursor-pointer label justify-center gap-2 bg-cyan-200 mb-4">
+            {/* <label className="cursor-pointer label justify-center gap-2 bg-cyan-200 mb-4">
                 <span className="label-text text-black">{productType === 'short' ? "Short Product" : "Stock Product"}</span>
                 <input type="checkbox" className="toggle toggle-info" onChange={handleProductType} checked={productType === 'short' ? true : false} />
-            </label>
+            </label> */}
             <InputFields
                 modifiedProductList={modifiedProductList}
                 productDetails={productDetails}

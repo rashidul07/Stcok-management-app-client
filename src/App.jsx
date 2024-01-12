@@ -59,18 +59,18 @@ const router = createBrowserRouter([
         path: '/modifyProduct',
         element: <ModifyProduct />,
       },
-      {
-        path: '/marketList',
-        element: <DisplayProduct isMarket={true} />,
-      },
+      // {
+      //   path: '/marketList',
+      //   element: <DisplayProduct isMarket={true} />,
+      // },
       {
         path: '/print',
         element: <Print />,
       },
-      {
-        path: '/market',
-        element: <Print isMarket={true} />,
-      },
+      // {
+      //   path: '/market',
+      //   element: <Print isMarket={true} />,
+      // },
       {
         path: '*',
         element: <ErrorPage />,
